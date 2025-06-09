@@ -1,0 +1,23 @@
+{
+  "configurations": [
+    {
+      "name": "Flutter",
+      "request": "launch",
+      "type": "dart",
+      "toolArgs": [
+        "--dart-define-from-file",
+        "secrets.json"
+      ]
+    },
+    {
+      "name": "Flutter Tests",
+      "request": "launch", 
+      "type": "dart",
+      "program": "test",
+      "toolArgs": [
+        "--dart-define-from-file",
+        "secrets.json"
+      ]
+    }
+  ]
+}
