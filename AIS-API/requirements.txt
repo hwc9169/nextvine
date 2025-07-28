@@ -1,0 +1,9 @@
+pillow==11.2.1
+tensorflow==2.10.0
+rembg==2.0.61
+tqdm
+numpy==1.24
+fastapi[standard]==0.116.1
+onnxruntime
+requests
+  
