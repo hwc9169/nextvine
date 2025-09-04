@@ -12,9 +12,9 @@ interface ReasonsProps {
 export function Reasons({ language }: ReasonsProps) {
   const content = {
     ko: {
-      tag: '왜 스콜리스캔인가요?',
+      tag: '왜 스콜리오스캔인가요?',
       title: '선택하는 이유',
-      titleHighlight: '스콜리스캔',
+      titleHighlight: '스콜리오스캔',
       subtitle: '가정에서 신뢰하는 우리 아이 척추건강 파트너',
       reasons: [
         {

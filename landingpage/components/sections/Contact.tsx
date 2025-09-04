@@ -22,7 +22,7 @@ export function Contact({ language }: ContactProps) {
   const content = {
     ko: {
       title: '우리 아이 척추건강, 곧 만나보세요',
-      subtitle: '스콜리스캔 앱이 곧 출시됩니다!',
+      subtitle: '스콜리오스캔 앱이 곧 출시됩니다!',
       subtitle2: '출시 소식을 가장 먼저 받아보시고, 우리 아이의 척추건강을 안전하게 관리하세요.',
       form: {
         email: '이메일',

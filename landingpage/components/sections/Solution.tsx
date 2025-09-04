@@ -13,7 +13,7 @@ export function Solution({ language }: SolutionProps) {
     ko: {
       title: '집에서 시작해 병원까지 이어지는 안심 솔루션',
       subtitle: '간편한 촬영과 AI 분석, 그리고 전문의 연계까지 한 번에.',
-      centerText: '스콜리스캔의 특별함',
+      centerText: '스콜리오스캔의 특별함',
       description: 'GNN(Graph Neural Network)이 다양한 대학병원에서 협업하여 수집한 데이터를 해부학적 랜드마크 관계를 학습하여 더 정교한 패턴 분석을 제공합니다.',
       connections: {
         doctorPatient: '정기적 체크',
