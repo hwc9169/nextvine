@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 
+
 from image_segmentation import run_image_segmentation
 from esrgan import pred
 from utils import download_image
