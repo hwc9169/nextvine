@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Container } from '../ui/container'
+import { Container } from '../ui/Container'
 import Image from 'next/image'
 
 interface MonitoringProps {
@@ -17,7 +17,7 @@ export function Monitoring({ language }: MonitoringProps) {
           척추 모니터링
         </>
       ),
-      subtitle: '아이의 척추 건강은 초기부터 꾸준히 살펴보는 것이 가장 중요합니다. 스콜리오스캔은 집에서 간단히 촬영한 사진을 AI가 분석하고, 그 결과를 전문의가 검토하여 정기적으로 관리할 수 있도록 돕습니다. 이제 병원에 자주 가지 않아도, 집과 병원이 연결된 새로운 방식의 척추 관리를 경험할 수 있습니다.'
+      subtitle: '아이의 척추 건강은 초기부터 꾸준히 살펴보는 것이 가장 중요합니다. 스콜리스캔은 집에서 간단히 촬영한 사진을 AI가 분석하고, 그 결과를 전문의가 검토하여 정기적으로 관리할 수 있도록 돕습니다. 이제 병원에 자주 가지 않아도, 집과 병원이 연결된 새로운 방식의 척추 관리를 경험할 수 있습니다.'
     },
     en: {
       title: (
@@ -31,46 +31,47 @@ export function Monitoring({ language }: MonitoringProps) {
   }
 
   return (
-    <div className="h-full flex items-center justify-center bg-gray-50 relative overflow-hidden">
-      {/* 배경 도형 - 섹션의 80% 높이, 90% 너비로 오른쪽에서 시작 */}
+    <div className="h-full lg:flex lg:items-center lg:justify-center min-h-[800px] lg:min-h-screen bg-gray-50 relative overflow-hidden">
+      {/* 모바일/태블릿용 gradient 배경 */}
+      <div className="absolute inset-0 gradient-primary lg:hidden opacity-90" />
+      {/* 배경 도형 - PC/노트북에서만 표시 */}
       <motion.div
         initial={{ x: '50vw', opacity: 0 }}
         whileInView={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="absolute bottom-[0%] right-0 gradient-primary rounded-tl-[300px]"
+        className="hidden lg:block absolute bottom-[0%] right-0 gradient-primary rounded-tl-[300px]"
         style={{ 
           height: '90%', 
-          width: '90%',
+          width: '95%',
           zIndex: 1
         }}
       />
 
       <Container size="1600">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center relative z-10 py-8 sm:py-12 lg:py-0">
           {/* 텍스트 콘텐츠 - 왼쪽 하단 */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="space-y-6 lg:self-end lg:pb-16 p-20"
+            className="space-y-4 sm:space-y-6 p-4 sm:p-6 lg:self-end lg:pb-16 lg:p-20 order-2 lg:order-1"
           >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
               {content[language].title}
             </h2>
-            <p className="text-base md:text-lg text-white leading-relaxed">
+            <p className="text-sm sm:text-base lg:text-lg text-white leading-relaxed">
               {content[language].subtitle}
             </p>
           </motion.div>
 
           {/* 이미지 영역 - 오른쪽 */}
-          <div className="relative lg:h-[600px] h-[400px] overflow-visible">
-
-            {/* PC 이미지 - sec6-pc (오른쪽에서 순차적으로 나옴, 일부가 오른쪽으로 걸쳐나감) */}
+          <div className="relative h-[400px] sm:h-[500px] lg:h-[600px] overflow-visible order-1 lg:order-2">
+            {/* PC 이미지 - sec6-pc - 데스크톱에서만 표시 */}
             <motion.div
               initial={{ x: 400, opacity: 0 }}
               whileInView={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="absolute top-4 left-0 w-[1100px] h-[680px]"
+              className="hidden lg:block absolute top-4 left-0 w-[1100px] h-[680px]"
             >
               <Image
                 src="/images/sec6-pc.png"
@@ -80,13 +81,23 @@ export function Monitoring({ language }: MonitoringProps) {
               />
             </motion.div>
 
-            {/* 앱 이미지 - sec6-app (오른쪽에서 순차적으로 나옴) */}
+            {/* 모바일/태블릿용 앱 이미지 - sec6-app */}
+            <div className="lg:hidden absolute top-16 right-4 w-36 h-72 sm:top-20 sm:right-8 sm:w-40 sm:h-80 md:top-24 md:right-12 md:w-52 md:h-[416px] z-50">
+              <Image
+                src="/images/sec6-app.png"
+                alt="Mobile App"
+                fill
+                className="object-contain"
+              />
+            </div>
+            
+            {/* 데스크톱용 앱 이미지 */}
             <motion.div
               initial={{ x: 300, opacity: 0 }}
               whileInView={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="absolute top-24 left-72 w-[600px] h-[850px]"
-              style={{ zIndex: 30 }}
+              className="hidden lg:block absolute top-24 left-72 w-[350px] h-[600px]"
+              style={{ zIndex: 40 }}
             >
               <Image
                 src="/images/sec6-app.png"
@@ -94,6 +105,24 @@ export function Monitoring({ language }: MonitoringProps) {
                 fill
                 className="object-contain"
               />
+            </motion.div>
+
+            {/* 모바일/태블릿용 심플 사진 - PC 이미지 대체 */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="lg:hidden absolute inset-0 flex items-center justify-center"
+              style={{ zIndex: 10 }}
+            >
+              <div className="relative w-full h-full mx-auto">
+                <Image
+                  src="/images/sec6-pc.png"
+                  alt="Mobile App Interface"
+                  fill
+                  className="object-contain"
+                />
+              </div>
             </motion.div>
           </div>
         </div>

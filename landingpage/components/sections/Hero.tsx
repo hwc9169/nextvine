@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Button } from '../ui/button'
+import { Button } from '../ui/Button'
 import { ScrollIndicator } from '../ui/ScrollIndicator'
 
 interface HeroProps {
@@ -10,9 +10,9 @@ interface HeroProps {
 
 export function Hero({ language }: HeroProps) {
   const handleNotifyClick = () => {
-    // Contact 섹션(인덱스 4)으로 스크롤
+    // Contact 섹션(인덱스 8)으로 스크롤
     const event = new CustomEvent('scrollToSection', { 
-      detail: { sectionIndex: 4 } 
+      detail: { sectionIndex: 8 } 
     })
     window.dispatchEvent(event)
   }
@@ -31,13 +31,13 @@ export function Hero({ language }: HeroProps) {
   }
 
   return (
-    <section className="min-h-screen pb-0 gradient-primary relative overflow-hidden">
-      {/* Hero 이미지 - Absolute 위치 (데스크톱: 오른쪽 바닥, 모바일: 하단) */}
+    <section className="min-h-screen pb-0 gradient-primary relative overflow-hidden overflow-x-hidden">
+      {/* 데스크톱용 Hero 이미지 - 오른쪽 바닥 */}
       <motion.div
         initial={{ opacity: 0, x: 100 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.3, duration: 0.8 }}
-        className="absolute bottom-0 right-12 z-10 lg:block hidden"
+        className="absolute bottom-0 right-12 z-10 hidden xl:block"
       >
         <img 
           src="/images/hero-img.png" 
@@ -46,22 +46,36 @@ export function Hero({ language }: HeroProps) {
         />
       </motion.div>
 
-      {/* 모바일용 Hero 이미지 - 하단 */}
+      {/* 노트북용 Hero 이미지 - 오른쪽 바닥, 작은 크기 */}
       <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, x: 100 }}
+        animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.3, duration: 0.8 }}
-        className="absolute bottom-0 left-1/2 transform -translate-x-1/2 z-10 lg:hidden"
+        className="absolute bottom-0 right-8 z-10 hidden lg:block xl:hidden"
       >
         <img 
           src="/images/hero-img.png" 
           alt="Scoliscan App Interface"
-          className="h-[40vh] w-auto object-contain object-bottom"
+          className="h-[60vh] w-auto object-contain object-bottom"
         />
       </motion.div>
 
-      <div className="container-1600 px-4 sm:px-6 lg:px-8 h-screen relative z-20 flex items-center">
-        <div className="w-full max-w-3xl">
+      {/* 태블릿/모바일용 Hero 이미지 - 중앙 하단 */}
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3, duration: 0.8 }}
+        className="absolute bottom-0 left-0 right-0 z-10 lg:hidden flex justify-center"
+      >
+        <img 
+          src="/images/hero-img.png" 
+          alt="Scoliscan App Interface"
+          className="h-[35vh] sm:h-[40vh] w-auto object-contain object-bottom"
+        />
+      </motion.div>
+
+      <div className="container-1600 px-4 sm:px-6 lg:px-8 h-screen relative z-20 flex lg:items-center items-center lg:justify-start justify-center lg:pt-0 pt-0 lg:pb-0 pb-32">
+        <div className="w-full max-w-3xl lg:text-left text-center">
       {/* 왼쪽 텍스트 콘텐츠 */}
       <motion.div
         initial={{ opacity: 0, x: -50 }}
@@ -88,7 +102,7 @@ export function Hero({ language }: HeroProps) {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.8 }}
-          className="text-lg md:text-xl text-white leading-relaxed max-w-3xl"
+          className="text-lg md:text-xl text-white leading-relaxed max-w-3xl lg:mx-0 mx-auto"
         >
           {content[language].subtitle.split('\n').map((line, index) => (
             <span key={index} className="block">

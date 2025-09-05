@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Container } from '../ui/container'
+import { Container } from '../ui/Container'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 
@@ -12,9 +12,9 @@ interface ReasonsProps {
 export function Reasons({ language }: ReasonsProps) {
   const content = {
     ko: {
-      tag: '왜 스콜리오스캔인가요?',
+      tag: '왜 스콜리스캔인가요?',
       title: '선택하는 이유',
-      titleHighlight: '스콜리오스캔',
+      titleHighlight: '스콜리스캔',
       subtitle: '가정에서 신뢰하는 우리 아이 척추건강 파트너',
       reasons: [
         {
@@ -93,26 +93,26 @@ export function Reasons({ language }: ReasonsProps) {
 
 
   return (
-    <div className="h-screen relative overflow-hidden" style={{ backgroundColor: '#1D212E' }}>
-      <Container size="1600" className="h-full flex flex-col justify-center py-16">
+    <div className="min-h-screen lg:h-screen relative overflow-hidden" style={{ backgroundColor: '#1D212E' }}>
+      <Container size="1600" className="min-h-screen lg:h-full flex flex-col justify-center py-8 sm:py-12 lg:py-16">
         {/* 헤더 */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: false, amount: 0.3 }}
-          className="text-center mb-8"
+          className="text-center mb-6 sm:mb-8 px-4"
         >
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
             viewport={{ once: false, amount: 0.3 }}
-            className="inline-flex items-center justify-center gap-3 mb-6 px-6 py-3 rounded-full"
+            className="inline-flex items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-6 px-4 sm:px-6 py-2 sm:py-3 rounded-full"
             style={{ backgroundColor: 'rgba(0, 212, 170, 0.2)' }}
           >
             <Image src="/images/star.svg" alt="Star" width={20} height={20} />
-            <span className="font-medium text-lg" style={{ color: '#00D4AA' }}>{content[language].tag}</span>
+            <span className="font-medium text-sm sm:text-base lg:text-lg" style={{ color: '#00D4AA' }}>{content[language].tag}</span>
           </motion.div>
           
           <motion.h2
@@ -120,7 +120,7 @@ export function Reasons({ language }: ReasonsProps) {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
             viewport={{ once: false, amount: 0.3 }}
-            className="text-4xl md:text-5xl font-bold mb-4 leading-tight text-white"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 leading-tight text-white"
           >
             <span style={{ color: '#00D4AA' }}>{content[language].titleHighlight}</span>{' '}
             {content[language].title}
@@ -131,14 +131,14 @@ export function Reasons({ language }: ReasonsProps) {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
             viewport={{ once: false, amount: 0.3 }}
-            className="text-xl text-gray-300"
+            className="text-sm sm:text-base lg:text-xl text-gray-300 px-2 sm:px-0"
           >
             {content[language].subtitle}
           </motion.p>
         </motion.div>
 
         {/* 이유 카드들 */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8 mx-auto px-4 lg:px-0">
           {content[language].reasons.map((reason, index) => {
             return (
               <motion.div
@@ -152,29 +152,30 @@ export function Reasons({ language }: ReasonsProps) {
                 }}
                 viewport={{ once: false, amount: 0.3 }}
                 className={cn(
-                  "relative py-6 px-10 rounded-3xl text-center",
+                  "relative py-4 sm:py-6 px-4 sm:px-6 lg:px-10 rounded-2xl sm:rounded-3xl text-center",
                   "bg-white/10 backdrop-blur-sm border border-white/50",
                   "lg:min-w-[450px]"
                 )}
               >
                 <div className="flex flex-col items-center">
                   <div className={cn(
-                    "w-16 h-16 rounded-2xl mb-6 flex items-center justify-center",
+                    "w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl mb-4 sm:mb-6 flex items-center justify-center",
                     "gradient-primary"
                   )}>
                     <Image 
                       src={reason.icon}
                       alt={reason.title}
-                      width={32}
-                      height={32}
+                      width={24}
+                      height={24}
+                      className="sm:w-8 sm:h-8"
                     />
                   </div>
                   
-                  <h3 className="text-xl font-bold text-white mb-4">
+                  <h3 className="text-lg sm:text-xl font-bold text-white mb-2 sm:mb-4">
                     {reason.title}
                   </h3>
                   
-                  <p className="text-gray-300 leading-relaxed">
+                  <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
                     {reason.description}
                   </p>
                 </div>
@@ -189,9 +190,9 @@ export function Reasons({ language }: ReasonsProps) {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.6 }}
           viewport={{ once: false, amount: 0.3 }}
-          className="text-center"
+          className="text-center px-4"
         >
-          <p className="text-sm text-gray-400 leading-relaxed whitespace-pre-line max-w-4xl mx-auto">
+          <p className="text-xs sm:text-sm text-gray-400 leading-relaxed whitespace-pre-line max-w-4xl mx-auto">
             {content[language].disclaimer}
           </p>
         </motion.div>

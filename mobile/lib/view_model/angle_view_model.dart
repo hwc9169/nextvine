@@ -9,7 +9,7 @@ class AngleViewModel extends ChangeNotifier {
   final aisAPI = AisAPI();
   final firebaseStorageRepository = FirebaseStorageRepository();
 
-  Angle _angle = Angle(0.0, 0.0, 0.0);
+  Angle _angle = Angle(0.0, 0.0, 0.0, BackType.doubleThoracic);
   bool _isLoading = false;
   bool get isLoading => _isLoading;
   Angle get angle => _angle;
@@ -23,14 +23,15 @@ class AngleViewModel extends ChangeNotifier {
     _setLoading(true);
 
     final res = await firebaseStorageRepository.uploadFile(file);
-    _angle = await aisAPI.predictAngleByServer(res.downloadURL);
+    //_angle = await aisAPI.predictAngleByServer(res.downloadURL);
+    _angle = await aisAPI.predictAngleOnDevice(res.downloadURL);
     final data = {
       'proximalThoracic': _angle.proximalThoracic,
       'mainThoracic': _angle.mainThoracic,
       'lumbar': _angle.lumbar,
+      'backType': _angle.backType,
     };
     final downloadURL = res.downloadURL;
-
     Logger().i('Download URL: $downloadURL\n Angle predudction result: $data');
     _setLoading(false);
   }

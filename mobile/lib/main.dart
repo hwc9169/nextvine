@@ -10,16 +10,16 @@ import 'view/camera_screen.dart';
 import 'view_model/angle_view_model.dart';
 import 'theme.dart';
 
-
-
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); 
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     name: "scoliosis",
     options: DefaultFirebaseOptions.currentPlatform,
   );
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
   ]);
   runApp(const ProviderApp());
 }

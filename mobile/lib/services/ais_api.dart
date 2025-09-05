@@ -1,13 +1,37 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:serious_python/serious_python.dart';
+
+enum BackType {
+  doubleThoracic,
+  singleThoracic,
+  doubleLumbar,
+  singleLumbar,
+}
+
+extension BackTypeExtension on BackType {
+  static BackType fromString(String backType) {
+    switch (backType) {
+      case 'double thoracic':
+        return BackType.doubleThoracic;
+      case 'single thoracic':
+        return BackType.singleThoracic;
+      case 'double lumbar':
+        return BackType.doubleLumbar;
+      case 'single lumbar':
+        return BackType.singleLumbar;
+      default:
+        return BackType.doubleThoracic;
+    }
+  }
+}
 
 class Angle {
   double proximalThoracic;
   double mainThoracic;
   double lumbar;
+  BackType backType;
 
-  Angle(this.proximalThoracic, this.mainThoracic, this.lumbar);
+  Angle(this.proximalThoracic, this.mainThoracic, this.lumbar, this.backType);
 }
 
 class AisAPI {
@@ -23,24 +47,21 @@ class AisAPI {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
+      final backType =
+          BackTypeExtension.fromString(data['back_type'] ?? 'double thoracic');
       return Angle(
         data['proximal_thoracic'] ?? 0.0,
         data['main_thoracic'] ?? 0.0,
         data['lumbar'] ?? 0.0,
+        backType,
       );
     }
     throw Exception('Failed to fetch angle data');
   }
 
   Future<Angle> predictAngleOnDevice(String imagePath) async {
-    SeriousPython.run('app/app.zip');
-
     // For demonstration, return a fixed angle
-    return Angle(10.0, 20.0, 30.0);
-  }
-
-  Future<void> testSeriousPython() async {
-    final result =
-        await SeriousPython.run('app/app.zip', appFileName: 'main.py');
+    await Future.delayed(const Duration(seconds: 3));
+    return Angle(10.0, 13.0, 0, BackType.doubleThoracic);
   }
 }

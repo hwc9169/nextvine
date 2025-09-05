@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:nextvine/scoliometer/views/scoliometer_view_old.dart';
 import 'dashboard_view.dart';
 import 'package:nextvine/view/camera_guide_screen.dart';
+import 'package:nextvine/scoliometer/views/scoliometer_view.dart';
 
 class Pair {
   final String title;
@@ -20,7 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
   final List<Pair> _pages = <Pair>[
-    Pair('Dashboard', DashboardView()),
+    Pair('Dashboard', const DashboardView()),
+    Pair('Scoliometer', const ScoliometerHome()),
     //Pair('Setting', SettingsView()),
   ];
 
@@ -39,7 +42,8 @@ class _HomeScreenState extends State<HomeScreen> {
       body: _pages[_selectedIndex].widget,
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
-        notchMargin: 8.0,
+        notchMargin: 4.0,
+        height: 50.0,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
@@ -51,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () => _onItemTapped(0),
             ),
             IconButton(
-              icon: Icon(Icons.settings,
+              icon: Icon(Icons.straighten,
                   color: _selectedIndex == 1
                       ? Theme.of(context).colorScheme.secondary
                       : Colors.grey),

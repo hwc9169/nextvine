@@ -1,7 +1,7 @@
 'use client'
 
-import { Button } from './ui/button'
-import { Container } from './ui/container'
+import { Button } from './ui/Button'
+import { Container } from './ui/Container'
 import { Globe } from 'lucide-react'
 import { useLanguage } from '@/lib/language-context'
 import { useEffect, useState } from 'react'
@@ -77,7 +77,7 @@ export function Navigation() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md">
       <Container size="1600">
-        <nav className="flex items-center justify-between h-16">
+        <nav className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
           {/* 로고 */}
           <div className="flex-shrink-0 cursor-pointer flex items-center" onClick={() => scrollToSection(0)}>
             <img 
@@ -91,11 +91,11 @@ export function Navigation() {
           <div className="flex-1"></div>
 
           {/* 언어 전환 및 CTA */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 sm:space-x-4">
             {/* 언어 전환 버튼 */}
             <button
               onClick={toggleLanguage}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                 (currentSection === 7 || currentSection === 8)
                   ? 'text-white hover:bg-gray-100/20'
                   : currentSection >= 2 
@@ -104,7 +104,7 @@ export function Navigation() {
               }`}
             >
               <Globe className="w-4 h-4" />
-              <span className="uppercase font-semibold">
+              <span className="uppercase font-semibold text-xs sm:text-sm">
                 {language === 'ko' ? 'KR' : 'EN'}
               </span>
             </button>
@@ -114,9 +114,14 @@ export function Navigation() {
               variant={(currentSection === 7 || currentSection === 8) ? "white" : (currentSection >= 2 ? "primary" : "white")}
               onClick={handleNotifyClick}
               size="sm"
-              className="whitespace-nowrap"
+              className="whitespace-nowrap text-xs sm:text-sm px-2 sm:px-4 py-1 sm:py-2"
             >
-              {language === 'ko' ? '출시 알림 받기' : 'Get Launch Notifications'}
+              <span className="hidden sm:inline">
+                {language === 'ko' ? '출시 알림 받기' : 'Get Launch Notifications'}
+              </span>
+              <span className="sm:hidden">
+                {language === 'ko' ? '알림받기' : 'Notify'}
+              </span>
             </Button>
           </div>
         </nav>

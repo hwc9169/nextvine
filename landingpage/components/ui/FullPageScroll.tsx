@@ -18,15 +18,22 @@ export function FullPageScroll({ children, className = '' }: FullPageScrollProps
   // children을 배열로 변환
   const childrenArray = Array.isArray(children) ? children : [children]
 
-  const scrollToSection = (sectionIndex: number) => {
+  const scrollToSection = (sectionIndex: number, fromSection?: number) => {
     if (isScrolling || sectionIndex < 0 || sectionIndex >= childrenArray.length) return
+    
+    const previousSection = fromSection !== undefined ? fromSection : currentSection
+    const direction = sectionIndex > previousSection ? 'down' : 'up'
     
     setIsScrolling(true)
     setCurrentSection(sectionIndex)
     
-    // 섹션 변경 이벤트 발생
+    // 섹션 변경 이벤트 발생 (방향 정보 포함)
     const event = new CustomEvent('sectionChanged', { 
-      detail: { sectionIndex } 
+      detail: { 
+        sectionIndex, 
+        previousSection,
+        direction
+      } 
     })
     window.dispatchEvent(event)
     
@@ -161,11 +168,11 @@ export function FullPageScroll({ children, className = '' }: FullPageScrollProps
   if (isMobile) {
     // 모바일에서는 일반 스크롤 레이아웃
     return (
-      <div className={`${className}`}>
+      <div className={`overflow-x-hidden ${className}`}>
         {childrenArray.map((child, index) => (
           <section
             key={index}
-            className="min-h-screen w-full relative"
+            className="min-h-screen w-full relative overflow-x-hidden"
           >
             {child}
           </section>
@@ -175,7 +182,7 @@ export function FullPageScroll({ children, className = '' }: FullPageScrollProps
   }
 
   return (
-    <div className={`fixed inset-0 overflow-hidden ${className}`}>
+    <div className={`fixed inset-0 overflow-hidden overflow-x-hidden ${className}`}>
       {/* 스크롤 인디케이터 */}
       <div className="fixed right-6 top-1/2 transform -translate-y-1/2 z-50 space-y-3">
         {childrenArray.map((_, index) => {

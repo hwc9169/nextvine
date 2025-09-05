@@ -20,7 +20,7 @@ export default function Home() {
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage }}>
-      <main className="relative">
+      <main className="relative overflow-x-hidden">
         {/* 네비게이션 */}
         <Navigation />
 

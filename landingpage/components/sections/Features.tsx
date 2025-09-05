@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Container } from '../ui/container'
+import { Container } from '../ui/Container'
 import { ArrowRight, X, Check } from 'lucide-react'
 import Image from 'next/image'
 
@@ -86,17 +86,17 @@ export function Features({ language }: FeaturesProps) {
   }
 
   return (
-    <div className="h-full flex items-center justify-center bg-white">
+    <div className="min-h-screen lg:h-full flex items-center justify-center bg-white py-12 lg:py-0">
       <Container size="1600">
-        <div className="grid lg:grid-cols-[2fr,3fr] gap-12 items-center">
+        <div className="grid lg:grid-cols-[2fr,3fr] gap-8 lg:gap-12 items-center">
           {/* Left: Image */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="flex justify-center"
+            className="flex justify-center order-2 lg:order-1"
           >
-            <div className="relative w-full h-[500px] lg:h-[650px]">
+            <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[650px]">
               <Image
                 src="/images/Features-image.png"
                 alt="Scoliscan Features"
@@ -112,22 +112,22 @@ export function Features({ language }: FeaturesProps) {
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="space-y-8"
+            className="space-y-6 lg:space-y-8 order-1 lg:order-2"
           >
-            <div>
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight-custom">
+            <div className="text-center lg:text-left">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 leading-tight-custom">
                 {content[language].title}
               </h2>
-              <p className="text-lg md:text-xl text-gray-600 leading-relaxed">
+              <p className="text-base sm:text-lg lg:text-xl text-gray-600 leading-relaxed">
                 {content[language].subtitle}
               </p>
             </div>
 
             {/* Comparison Table */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 xl:flex xl:justify-start xl:gap-6">
               {/* Traditional Way Section */}
-              <div className="bg-[#F2F2F2] rounded-lg p-4 space-y-3 min-w-[300px] w-full md:min-w-[400px]">
-                <h3 className="text-lg font-bold text-gray-800 text-left mb-4">
+              <div className="bg-[#F2F2F2] rounded-lg p-3 sm:p-4 space-y-2 sm:space-y-3 w-full xl:w-[400px]">
+                <h3 className="text-base sm:text-lg font-bold text-gray-800 text-center md:text-left mb-3 lg:mb-4">
                   기존 방식
                 </h3>
                 <div className="space-y-2">
@@ -137,9 +137,9 @@ export function Features({ language }: FeaturesProps) {
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1, duration: 0.6 }}
-                      className="bg-white rounded-lg p-3 text-center"
+                      className="bg-white rounded-lg p-2 sm:p-3 text-center"
                     >
-                      <h4 className="font-bold text-gray-900 text-base mb-1">
+                      <h4 className="font-bold text-gray-900 text-sm sm:text-base mb-1">
                         {item.traditional}
                       </h4>
                       <p className="text-xs text-gray-600 leading-relaxed">
@@ -151,8 +151,8 @@ export function Features({ language }: FeaturesProps) {
               </div>
 
               {/* Scoliscan Way Section */}
-              <div className="gradient-primary rounded-lg p-4 space-y-3 min-w-[300px] w-full md:min-w-[400px]">
-                <h3 className="text-lg font-bold text-white text-left mb-4">
+              <div className="gradient-primary rounded-lg p-3 sm:p-4 space-y-2 sm:space-y-3 w-full xl:w-[400px]">
+                <h3 className="text-base sm:text-lg font-bold text-white text-center md:text-left mb-3 lg:mb-4">
                   Scoliscan의 방식
                 </h3>
                 <div className="space-y-2">
@@ -162,9 +162,9 @@ export function Features({ language }: FeaturesProps) {
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1, duration: 0.6 }}
-                      className="bg-white rounded-lg p-3 text-center"
+                      className="bg-white rounded-lg p-2 sm:p-3 text-center"
                     >
-                      <h4 className="font-bold text-primary-600 text-base mb-1">
+                      <h4 className="font-bold text-primary-600 text-sm sm:text-base mb-1">
                         {item.scoliscan}
                       </h4>
                       <p className="text-xs text-gray-600 leading-relaxed">

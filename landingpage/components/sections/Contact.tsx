@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Container } from '../ui/container'
-import { Button } from '../ui/button'
+import { Container } from '../ui/Container'
+import { Button } from '../ui/Button'
 import { SurveyModal } from '../ui/SurveyModal'
 import Image from 'next/image'
 
@@ -22,7 +22,7 @@ export function Contact({ language }: ContactProps) {
   const content = {
     ko: {
       title: '우리 아이 척추건강, 곧 만나보세요',
-      subtitle: '스콜리오스캔 앱이 곧 출시됩니다!',
+      subtitle: '스콜리스캔 앱이 곧 출시됩니다!',
       subtitle2: '출시 소식을 가장 먼저 받아보시고, 우리 아이의 척추건강을 안전하게 관리하세요.',
       form: {
         email: '이메일',
@@ -83,7 +83,7 @@ export function Contact({ language }: ContactProps) {
 
   return (
     <div 
-      className="h-screen relative overflow-hidden flex items-center justify-center"
+      className="min-h-screen lg:h-screen relative overflow-hidden flex items-center justify-center"
       style={{
         backgroundImage: 'url(/images/form-bg.svg)',
         backgroundSize: 'cover',
@@ -104,7 +104,7 @@ export function Contact({ language }: ContactProps) {
           width="1911" 
           height="343" 
           viewBox="0 0 1911 343" 
-          className="absolute top-1/3 left-0 w-full h-auto"
+          className="hidden lg:block absolute top-1/3 left-0 w-full h-auto"
           fill="none"
         >
           <motion.path 
@@ -122,16 +122,16 @@ export function Contact({ language }: ContactProps) {
         </svg>
       </motion.div>
 
-      <Container size="1600" className="relative z-10">
+      <Container size="1600" className="relative z-10 px-4 py-8 lg:py-0">
         <motion.div 
-          className="text-center mb-8"
+          className="text-center mb-6 sm:mb-8"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           viewport={{ once: false, amount: 0.3 }}
         >
           <motion.h2 
-            className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4 leading-tight px-2"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
@@ -140,7 +140,7 @@ export function Contact({ language }: ContactProps) {
             {content[language].title}
           </motion.h2>
           <motion.p 
-            className="text-xl text-white/90 mb-2"
+            className="text-base sm:text-lg lg:text-xl text-white/90 mb-2 px-2"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
@@ -149,7 +149,7 @@ export function Contact({ language }: ContactProps) {
             {content[language].subtitle}
           </motion.p>
           <motion.p 
-            className="text-lg text-white/80"
+            className="text-sm sm:text-base lg:text-lg text-white/80 px-2"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
@@ -160,23 +160,22 @@ export function Contact({ language }: ContactProps) {
 
         {/* 폼 */}
         <motion.div
-          className="mx-auto"
-          style={{ maxWidth: '650px' }}
+          className="mx-auto w-full max-w-[650px]"
           initial={{ opacity: 0, y: 60 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
           viewport={{ once: false, amount: 0.3 }}
         >
-          <div className="bg-white rounded-2xl p-8 shadow-2xl">
+          <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 shadow-2xl">
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
                 viewport={{ once: false, amount: 0.3 }}
               >
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                   {content[language].form.email}
                 </label>
                 <input
@@ -185,14 +184,14 @@ export function Contact({ language }: ContactProps) {
                   value={formData.email}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+                  className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
                   placeholder={language === 'ko' ? '이메일을 입력하세요' : 'Enter your email'}
                 />
               </motion.div>
 
               <motion.div
               >
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                   {content[language].form.targetAudience}
                 </label>
                 <select
@@ -200,7 +199,7 @@ export function Contact({ language }: ContactProps) {
                   value={formData.targetAudience}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+                  className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
                 >
                   <option value="자녀">{content[language].form.targetOptions.child}</option>
                   <option value="본인">{content[language].form.targetOptions.self}</option>
@@ -209,7 +208,7 @@ export function Contact({ language }: ContactProps) {
               </motion.div>
 
               <motion.div 
-                className="flex items-start space-x-3"
+                className="flex items-start space-x-2 sm:space-x-3"
               >
                 <input
                   type="checkbox"
@@ -217,10 +216,10 @@ export function Contact({ language }: ContactProps) {
                   id="agreement"
                   checked={formData.agreement}
                   onChange={(e) => setFormData({ ...formData, agreement: e.target.checked })}
-                  className="mt-1 w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+                  className="mt-0.5 sm:mt-1 w-3 h-3 sm:w-4 sm:h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
                   required
                 />
-                <label htmlFor="agreement" className="text-sm text-gray-600 leading-relaxed">
+                <label htmlFor="agreement" className="text-xs sm:text-sm text-gray-600 leading-relaxed">
                   {content[language].form.agreement}
                 </label>
               </motion.div>
@@ -230,7 +229,7 @@ export function Contact({ language }: ContactProps) {
                 <Button
                   type="submit"
                   size="lg"
-                  className="w-full flex items-center justify-center space-x-2 text-white hover:opacity-90"
+                  className="w-full flex items-center justify-center space-x-2 text-white hover:opacity-90 text-sm sm:text-base py-2 sm:py-3"
                   style={{ backgroundColor: '#22B3A4' }}
                   onClick={(e) => {
                     console.log('Button clicked directly')
@@ -240,9 +239,9 @@ export function Contact({ language }: ContactProps) {
                   <Image 
                     src="/images/icon-bell.svg" 
                     alt="Bell Icon" 
-                    width={20} 
-                    height={20}
-                    className="filter brightness-0 saturate-100 invert"
+                    width={16} 
+                    height={16}
+                    className="filter brightness-0 saturate-100 invert sm:w-5 sm:h-5"
                   />
                   <span>{content[language].form.submit}</span>
                 </Button>
@@ -254,33 +253,33 @@ export function Contact({ language }: ContactProps) {
       </Container>
 
       {/* Footer - 완전 하단에 너비 꽉차게 */}
-      <div className="absolute bottom-0 left-0 right-0 bg-white" style={{ height: '80px' }}>
-        <Container size="1600" className="h-full">
-          <div className="flex items-center justify-between h-full">
+      <div className="absolute bottom-0 left-0 right-0 bg-white h-20 sm:h-16 lg:h-20">
+        <Container size="1600" className="h-full px-4 py-3 sm:py-2 lg:py-0">
+          <div className="flex flex-col sm:flex-row items-center justify-between h-full gap-2 sm:gap-0">
             {/* 왼쪽: 저작권 */}
             <div>
-              <p className="text-sm text-gray-600">
+              <p className="text-xs sm:text-sm text-gray-600 text-center sm:text-left">
                 © 2025 ScolioScan. All rights reserved.
               </p>
             </div>
 
             {/* 오른쪽: 링크들 */}
-            <div className="flex items-center space-x-8">
+            <div className="flex items-center space-x-4 sm:space-x-8">
               <button
                 onClick={() => {}}
-                className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                className="text-xs sm:text-sm text-gray-600 hover:text-gray-900 transition-colors"
               >
                 Privacy
               </button>
               <button
                 onClick={() => {}}
-                className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                className="text-xs sm:text-sm text-gray-600 hover:text-gray-900 transition-colors"
               >
                 Terms
               </button>
               <button
                 onClick={() => {}}
-                className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                className="text-xs sm:text-sm text-gray-600 hover:text-gray-900 transition-colors"
               >
                 Contact
               </button>
