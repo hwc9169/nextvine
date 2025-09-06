@@ -171,6 +171,9 @@ class _ScoliometerHomeState extends State<ScoliometerHome> {
       _zeroOffset = _zeroByMount[_mount] ?? 0.0;
       _setScaleForRuler(_desiredDeviceWidthCm);
 
+      // Set initial orientation based on loaded mount mode
+      _setOrientationForMountMode(_mount);
+
       final raw = p.getString('pref_history_v1');
       if (raw != null && raw.isNotEmpty) {
         final decoded = jsonDecode(raw) as List<dynamic>;
@@ -671,6 +674,27 @@ class _ScoliometerHomeState extends State<ScoliometerHome> {
     _uiScale = (cm / 18.0).clamp(0.85, 1.15);
   }
 
+  void _setOrientationForMountMode(MountMode mount) {
+    List<DeviceOrientation> orientations;
+
+    switch (mount) {
+      case MountMode.flatBack:
+        // Flat back - use portrait for better ergonomics
+        orientations = [DeviceOrientation.portraitUp];
+        break;
+      case MountMode.longEdge:
+        // Long edge - use landscape left for better measurement
+        orientations = [DeviceOrientation.landscapeLeft];
+        break;
+      case MountMode.shortEdge:
+        // Short edge - use landscape right for better measurement
+        orientations = [DeviceOrientation.landscapeRight];
+        break;
+    }
+
+    SystemChrome.setPreferredOrientations(orientations);
+  }
+
   List<int> _availableSessionsDesc() {
     final set = <int>{};
     for (final r in _log) set.add(r.session);
@@ -702,17 +726,23 @@ class _ScoliometerHomeState extends State<ScoliometerHome> {
       mainAxisSize: MainAxisSize.min,
       children: [
         InputChip(
-          label: Text(_sessionDisplay(sessionId)),
+          label: Text(
+            _sessionDisplay(sessionId),
+            style: const TextStyle(fontSize: 10),
+          ),
           selected: selected,
           onPressed: onTap,
           onDeleted: null, // delete handled via menu
           selectedColor: _lighten(kBrand, 0.35),
           side: const BorderSide(color: Color(0x22000000)),
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          visualDensity: VisualDensity.compact,
         ),
         const SizedBox(width: 2),
         PopupMenuButton<String>(
           tooltip: 'Session options',
-          icon: const Icon(Icons.more_vert),
+          icon: const Icon(Icons.more_vert, size: 16),
           onSelected: (val) async {
             switch (val) {
               case 'rename':
@@ -731,9 +761,9 @@ class _ScoliometerHomeState extends State<ScoliometerHome> {
               value: 'rename',
               child: Row(
                 children: const [
-                  Icon(Icons.drive_file_rename_outline),
-                  SizedBox(width: 10),
-                  Text('Rename'),
+                  Icon(Icons.drive_file_rename_outline, size: 16),
+                  SizedBox(width: 8),
+                  Text('Rename', style: TextStyle(fontSize: 12)),
                 ],
               ),
             ),
@@ -741,9 +771,9 @@ class _ScoliometerHomeState extends State<ScoliometerHome> {
               value: 'export',
               child: Row(
                 children: const [
-                  Icon(Icons.copy_all),
-                  SizedBox(width: 10),
-                  Text('Copy CSV'),
+                  Icon(Icons.copy_all, size: 16),
+                  SizedBox(width: 8),
+                  Text('Copy CSV', style: TextStyle(fontSize: 12)),
                 ],
               ),
             ),
@@ -752,9 +782,10 @@ class _ScoliometerHomeState extends State<ScoliometerHome> {
               value: 'delete',
               child: Row(
                 children: const [
-                  Icon(Icons.delete_forever, color: Colors.red),
-                  SizedBox(width: 10),
-                  Text('Delete', style: TextStyle(color: Colors.red)),
+                  Icon(Icons.delete_forever, color: Colors.red, size: 16),
+                  SizedBox(width: 8),
+                  Text('Delete',
+                      style: TextStyle(color: Colors.red, fontSize: 12)),
                 ],
               ),
             ),
@@ -865,80 +896,209 @@ class _ScoliometerHomeState extends State<ScoliometerHome> {
             : _buildChart();
 
     return Scaffold(
-      bottomNavigationBar: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (_tab == 0)
-            SafeArea(
-              top: false,
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: _lighten(kBrand, 0.55),
-                  boxShadow: const [
-                    BoxShadow(
-                        blurRadius: 8,
-                        offset: Offset(0, -2),
-                        color: Color(0x1F000000))
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: _calibrateZero,
-                        icon: const Icon(Icons.center_focus_strong),
-                        label: const Text('Calibrate 0°'),
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(28)),
+      appBar: AppBar(
+        backgroundColor: _lighten(kBrand, 0.55),
+        elevation: 2,
+        centerTitle: true,
+        //actions button
+        //actions: [
+        //  if (_tab == 0)
+        //    Padding(
+        //      padding: const EdgeInsets.all(2),
+        //      child: Row(
+        //        crossAxisAlignment: CrossAxisAlignment.center,
+        //        children: [
+        //          OutlinedButton.icon(
+        //            onPressed: _calibrateZero,
+        //            icon: const Icon(Icons.center_focus_strong, size: 8),
+        //            label: const Text('Calibrate 0°',
+        //                style: TextStyle(fontSize: 8)),
+        //            style: OutlinedButton.styleFrom(
+        //              padding: const EdgeInsets.all(8),
+        //              shape: RoundedRectangleBorder(
+        //                borderRadius: BorderRadius.circular(28),
+        //              ),
+        //              side: BorderSide(color: kBrand),
+        //            ),
+        //          ),
+        //          const SizedBox(width: 8),
+        //          FilledButton.icon(
+        //            onPressed: _record,
+        //            icon: const Icon(Icons.bookmark_add_rounded, size: 8),
+        //            label: const Text('Record', style: TextStyle(fontSize: 8)),
+        //            style: FilledButton.styleFrom(
+        //              padding: const EdgeInsets.all(8),
+        //              backgroundColor: kBrand,
+        //              foregroundColor: Colors.white,
+        //              shape: RoundedRectangleBorder(
+        //                borderRadius: BorderRadius.circular(28),
+        //              ),
+        //            ),
+        //          ),
+        //        ],
+        //      ),
+        //    ),
+        //],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(-12),
+          child: Container(
+            color: Colors.transparent,
+            child: TabBar(
+              labelStyle: const TextStyle(fontSize: 8),
+              controller: TabController(length: 3, vsync: Scaffold.of(context)),
+              onTap: (idx) {
+                setState(() {
+                  _tab = idx;
+                });
+              },
+              tabs: [
+                Container(
+                  width: 80,
+                  height: 40,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    border: _tab == 0
+                        ? Border(bottom: BorderSide(color: kBrand, width: 3))
+                        : null,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.straighten,
+                        size: 12,
+                        color: _tab == 0 ? kBrand : Colors.black54,
+                      ),
+                      Text(
+                        'Measure',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: _tab == 0 ? kBrand : Colors.black54,
+                          fontWeight:
+                              _tab == 0 ? FontWeight.bold : FontWeight.normal,
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: FilledButton.icon(
-                        onPressed: _record,
-                        icon: const Icon(Icons.bookmark_add_rounded),
-                        label: const Text('Record'),
-                        style: FilledButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          backgroundColor: kBrand,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(28)),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: 80,
+                  height: 40,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    border: _tab == 1
+                        ? Border(bottom: BorderSide(color: kBrand, width: 3))
+                        : null,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.history,
+                        size: 12,
+                        color: _tab == 1 ? kBrand : Colors.black54,
+                      ),
+                      Text(
+                        'History',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: _tab == 1 ? kBrand : Colors.black54,
+                          fontWeight:
+                              _tab == 1 ? FontWeight.bold : FontWeight.normal,
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
+                Container(
+                  width: 80,
+                  height: 40,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    border: _tab == 2
+                        ? Border(bottom: BorderSide(color: kBrand, width: 3))
+                        : null,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.show_chart,
+                        size: 12,
+                        color: _tab == 2 ? kBrand : Colors.black54,
+                      ),
+                      Text(
+                        'Chart',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: _tab == 2 ? kBrand : Colors.black54,
+                          fontWeight:
+                              _tab == 2 ? FontWeight.bold : FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              indicatorColor: Colors.transparent, // Hide default indicator
+              labelColor: kBrand,
+              unselectedLabelColor: Colors.black54,
             ),
-          NavigationBar(
-            height: 50.0,
-            selectedIndex: _tab,
-            onDestinationSelected: (i) async {
-              await _maybeEndSessionAndSelect(i);
-              setState(() => _tab = i);
-              if (i == 0) _resumeMeasureView();
-            },
-            destinations: const [
-              NavigationDestination(icon: Icon(Icons.speed), label: 'Measure'),
-              NavigationDestination(
-                  icon: Icon(Icons.table_chart), label: 'History'),
-              NavigationDestination(
-                  icon: Icon(Icons.show_chart), label: 'Chart'),
-            ],
           ),
-        ],
+        ),
       ),
       body: RawKeyboardListener(
         autofocus: true,
         focusNode: _focusNode,
         onKey: _onRawKey,
-        child: body,
+        child: Stack(
+          children: [
+            body,
+            // Action buttons positioned under app bar
+            if (_tab == 0)
+              Positioned(
+                top: 8,
+                right: 8,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    OutlinedButton.icon(
+                      onPressed: _calibrateZero,
+                      icon: const Icon(Icons.center_focus_strong, size: 12),
+                      label: const Text('Calibrate 0°',
+                          style: TextStyle(fontSize: 10)),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        side: BorderSide(color: kBrand),
+                        minimumSize: const Size(0, 28),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    FilledButton.icon(
+                      onPressed: _record,
+                      icon: const Icon(Icons.bookmark_add_rounded, size: 12),
+                      label:
+                          const Text('Record', style: TextStyle(fontSize: 10)),
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        backgroundColor: kBrand,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        minimumSize: const Size(0, 28),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -986,7 +1146,7 @@ class _ScoliometerHomeState extends State<ScoliometerHome> {
                     // Controls (mount/width)
                     Positioned(
                       top: 8,
-                      right: 8,
+                      left: 8,
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -1003,6 +1163,7 @@ class _ScoliometerHomeState extends State<ScoliometerHome> {
                                 _targetDeg = 0.0;
                               });
                               unawaited(_saveMount());
+                              _setOrientationForMountMode(m);
                               _toast(
                                 m == MountMode.longEdge
                                     ? 'Mount: Long Edge'
@@ -1097,12 +1258,12 @@ class _ScoliometerHomeState extends State<ScoliometerHome> {
         }
 
         return Padding(
-          padding: const EdgeInsets.only(top: 8, bottom: 12),
+          padding: const EdgeInsets.only(top: 2, bottom: 2),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                padding: const EdgeInsets.symmetric(horizontal: 2.0),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -1113,7 +1274,7 @@ class _ScoliometerHomeState extends State<ScoliometerHome> {
                           children: [
                             for (final s in sessions)
                               Padding(
-                                padding: const EdgeInsets.only(right: 8.0),
+                                padding: const EdgeInsets.only(right: 2.0),
                                 child: _sessionChipWithMenu(
                                   sessionId: s,
                                   selected: _selectedSessionForHistory == s,
@@ -1126,54 +1287,69 @@ class _ScoliometerHomeState extends State<ScoliometerHome> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 2),
                     Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
+                      spacing: 2,
+                      runSpacing: 2,
                       children: [
                         OutlinedButton.icon(
                           onPressed: data.isEmpty
                               ? null
                               : () =>
                                   _exportCsvSession(_selectedSessionForHistory),
-                          icon: const Icon(Icons.copy_all),
-                          label: const Text('Copy session CSV'),
+                          icon: const Icon(Icons.copy_all, size: 12),
+                          label: const Text('Copy CSV',
+                              style: TextStyle(fontSize: 8)),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
+                            minimumSize: const Size(0, 24),
+                          ),
                         ),
                         FilledButton.icon(
                           style: FilledButton.styleFrom(
                               backgroundColor: Colors.red,
-                              foregroundColor: Colors.white),
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
+                              minimumSize: const Size(0, 24)),
                           onPressed: _log.isEmpty ? null : _confirmClearAll,
-                          icon: const Icon(Icons.delete_forever_rounded),
-                          label: const Text('Clear history'),
+                          icon: const Icon(Icons.delete_forever_rounded,
+                              size: 12),
+                          label: const Text('Clear',
+                              style: TextStyle(fontSize: 8)),
                         ),
                       ],
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 2),
               Container(
-                margin: const EdgeInsets.only(bottom: 10),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                margin: const EdgeInsets.only(bottom: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
                 decoration: BoxDecoration(
                   color: _lighten(kBrand, 0.48),
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: _darken(kBrand, 0.18)),
                 ),
                 child: Row(
                   children: [
-                    Expanded(child: Text('Count: ${data.length}')),
+                    Expanded(
+                        child: Text('Count: ${data.length}',
+                            style: TextStyle(fontSize: 8))),
                     Expanded(
                         child: Text(
-                            'Min: ${stats.min?.toStringAsFixed(1) ?? '-'}°')),
+                            'Min: ${stats.min?.toStringAsFixed(1) ?? '-'}°',
+                            style: TextStyle(fontSize: 8))),
                     Expanded(
                         child: Text(
-                            'Max: ${stats.max?.toStringAsFixed(1) ?? '-'}°')),
+                            'Max: ${stats.max?.toStringAsFixed(1) ?? '-'}°',
+                            style: TextStyle(fontSize: 8))),
                     Expanded(
                         child: Text(
-                            'Avg: ${stats.avg?.toStringAsFixed(1) ?? '-'}°')),
+                            'Avg: ${stats.avg?.toStringAsFixed(1) ?? '-'}°',
+                            style: TextStyle(fontSize: 8))),
                   ],
                 ),
               ),
@@ -1181,20 +1357,20 @@ class _ScoliometerHomeState extends State<ScoliometerHome> {
                 child: Theme(
                   data: Theme.of(context).copyWith(
                     dataTableTheme: DataTableThemeData(
-                      headingRowHeight: 56,
+                      headingRowHeight: 16,
                       headingTextStyle: TextStyle(
-                        fontSize: 14,
+                        fontSize: 8,
                         fontWeight: FontWeight.w700,
                         color: Colors.black87,
                       ),
                       headingRowColor: WidgetStateProperty.all(
                           Color.fromARGB(255, 204, 238, 239)),
-                      dataRowMinHeight: 24,
-                      horizontalMargin: 16,
+                      dataRowMinHeight: 16,
+                      horizontalMargin: 2,
                       columnSpacing: 0,
-                      dividerThickness: 0.6,
+                      dividerThickness: 0.4,
                       dataTextStyle:
-                          TextStyle(fontSize: 15, color: Colors.black87),
+                          TextStyle(fontSize: 9, color: Colors.black87),
                     ),
                   ),
                   child: SingleChildScrollView(
@@ -1290,9 +1466,9 @@ class _ScoliometerHomeState extends State<ScoliometerHome> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Top controls row (keep small padding)
+        // Top controls row (minimal padding)
         Padding(
-          padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+          padding: const EdgeInsets.fromLTRB(2, 2, 2, 2),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -1303,7 +1479,7 @@ class _ScoliometerHomeState extends State<ScoliometerHome> {
                     children: [
                       for (final s in sessions)
                         Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
+                          padding: const EdgeInsets.only(right: 4.0),
                           child: _sessionChipWithMenu(
                             sessionId: s,
                             selected: _selectedSessionForChart == s,
@@ -1316,23 +1492,32 @@ class _ScoliometerHomeState extends State<ScoliometerHome> {
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 4),
               Wrap(
-                spacing: 8,
-                runSpacing: 8,
+                spacing: 4,
+                runSpacing: 4,
                 children: [
                   OutlinedButton.icon(
                     onPressed: data.isEmpty ? null : _saveCurrentChartPng,
-                    icon: const Icon(Icons.download_rounded),
-                    label: const Text('Save PNG'),
+                    icon: const Icon(Icons.download_rounded, size: 12),
+                    label:
+                        const Text('Save PNG', style: TextStyle(fontSize: 8)),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      minimumSize: const Size(0, 24),
+                    ),
                   ),
                   FilledButton.icon(
                     style: FilledButton.styleFrom(
                         backgroundColor: Colors.red,
-                        foregroundColor: Colors.white),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        minimumSize: const Size(0, 24)),
                     onPressed: _log.isEmpty ? null : _confirmClearAll,
-                    icon: const Icon(Icons.delete_forever_rounded),
-                    label: const Text('Clear history'),
+                    icon: const Icon(Icons.delete_forever_rounded, size: 12),
+                    label: const Text('Clear', style: TextStyle(fontSize: 8)),
                   ),
                 ],
               ),
@@ -1677,8 +1862,8 @@ class _ChartPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final w = size.width, h = size.height;
 
-    // Layout (slightly tighter top/bottom to maximize plot)
-    final padding = const EdgeInsets.fromLTRB(56, 16, 16, 36);
+    // Layout (minimal padding to maximize plot area)
+    final padding = const EdgeInsets.fromLTRB(8, 8, 8, 8);
     final plot = Rect.fromLTWH(
       padding.left,
       padding.top,
@@ -1864,12 +2049,6 @@ class _ChartPainter extends CustomPainter {
       plot,
       color: Colors.green.shade700,
     );
-
-    // X captions (inside the plot, so they save)
-    _drawSmallText(canvas, 'Start', Offset(points.first.dx, plot.bottom - 12),
-        align: TextAlign.center);
-    _drawSmallText(canvas, 'End', Offset(points.last.dx, plot.bottom - 12),
-        align: TextAlign.center);
   }
 
   // ---- Helpers ----

@@ -9,7 +9,7 @@ enum BackType {
 }
 
 extension BackTypeExtension on BackType {
-  static BackType fromString(String backType) {
+  static BackType fromText(String backType) {
     switch (backType) {
       case 'double thoracic':
         return BackType.doubleThoracic;
@@ -21,6 +21,19 @@ extension BackTypeExtension on BackType {
         return BackType.singleLumbar;
       default:
         return BackType.doubleThoracic;
+    }
+  }
+
+  static String toText(BackType backType) {
+    switch (backType) {
+      case BackType.doubleThoracic:
+        return 'double thoracic';
+      case BackType.singleThoracic:
+        return 'single thoracic';
+      case BackType.doubleLumbar:
+        return 'double lumbar';
+      case BackType.singleLumbar:
+        return 'single lumbar';
     }
   }
 }
@@ -48,7 +61,7 @@ class AisAPI {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       final backType =
-          BackTypeExtension.fromString(data['back_type'] ?? 'double thoracic');
+          BackTypeExtension.fromText(data['back_type'] ?? 'double thoracic');
       return Angle(
         data['proximal_thoracic'] ?? 0.0,
         data['main_thoracic'] ?? 0.0,

@@ -9,27 +9,33 @@ class AngleViewModel extends ChangeNotifier {
   final aisAPI = AisAPI();
   final firebaseStorageRepository = FirebaseStorageRepository();
 
-  Angle _angle = Angle(0.0, 0.0, 0.0, BackType.doubleThoracic);
+  Angle? _angle;
   bool _isLoading = false;
   bool get isLoading => _isLoading;
-  Angle get angle => _angle;
+  Angle? get angle => _angle;
 
   void _setLoading(bool value) {
     _isLoading = value;
     notifyListeners();
   }
 
+  Future<void> fakePredictAngle(File file) async {
+    _setLoading(true);
+    await Future.delayed(const Duration(seconds: 3));
+    _angle = Angle(10.0, 13.0, 0, BackType.doubleThoracic);
+    _setLoading(false);
+  }
+
   Future<void> uploadImageAndPredictAngle(File file) async {
     _setLoading(true);
 
     final res = await firebaseStorageRepository.uploadFile(file);
-    //_angle = await aisAPI.predictAngleByServer(res.downloadURL);
-    _angle = await aisAPI.predictAngleOnDevice(res.downloadURL);
+    _angle = await aisAPI.predictAngleByServer(res.downloadURL);
     final data = {
-      'proximalThoracic': _angle.proximalThoracic,
-      'mainThoracic': _angle.mainThoracic,
-      'lumbar': _angle.lumbar,
-      'backType': _angle.backType,
+      'proximalThoracic': _angle?.proximalThoracic,
+      'mainThoracic': _angle?.mainThoracic,
+      'lumbar': _angle?.lumbar,
+      'backType': _angle?.backType,
     };
     final downloadURL = res.downloadURL;
     Logger().i('Download URL: $downloadURL\n Angle predudction result: $data');

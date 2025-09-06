@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:nextvine/scoliometer/views/scoliometer_view_old.dart';
 import 'dashboard_view.dart';
 import 'package:nextvine/view/camera_guide_screen.dart';
-import 'package:nextvine/scoliometer/views/scoliometer_view.dart';
 
 class Pair {
   final String title;
@@ -36,29 +35,31 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text((_pages[_selectedIndex]).title),
-      ),
       body: _pages[_selectedIndex].widget,
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
-        notchMargin: 4.0,
-        height: 50.0,
+        height: 50,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             IconButton(
-              icon: Icon(Icons.home,
-                  color: _selectedIndex == 0
-                      ? Theme.of(context).colorScheme.secondary
-                      : Colors.grey),
+              icon: Icon(
+                Icons.home,
+                color: _selectedIndex == 0
+                    ? Theme.of(context).colorScheme.secondary
+                    : Colors.grey,
+                size: 20,
+              ),
               onPressed: () => _onItemTapped(0),
             ),
             IconButton(
-              icon: Icon(Icons.straighten,
-                  color: _selectedIndex == 1
-                      ? Theme.of(context).colorScheme.secondary
-                      : Colors.grey),
+              icon: Icon(
+                Icons.straighten,
+                color: _selectedIndex == 1
+                    ? Theme.of(context).colorScheme.secondary
+                    : Colors.grey,
+                size: 20,
+              ),
               onPressed: () => _onItemTapped(1),
             ),
           ],

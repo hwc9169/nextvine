@@ -103,7 +103,7 @@ class _ScoliometerViewState extends State<ScoliometerView> {
                     ),
                   ),
                 NavigationBar(
-                  height: 50.0,
+                  height: 32.0,
                   selectedIndex: _tab,
                   onDestinationSelected: (i) {
                     setState(() => _tab = i);

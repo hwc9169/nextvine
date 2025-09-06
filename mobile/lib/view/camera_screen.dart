@@ -3,6 +3,7 @@ import 'package:camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:nextvine/view_model/angle_view_model.dart';
+import 'package:logger/logger.dart';
 import 'dart:io';
 
 class CameraScreen extends StatefulWidget {
@@ -96,7 +97,9 @@ class _CameraScreenState extends State<CameraScreen> {
                   final image = await _controller!.takePicture();
                   if (context.mounted) {
                     Provider.of<AngleViewModel>(context, listen: false)
-                        .uploadImageAndPredictAngle(File(image.path));
+                        .fakePredictAngle(File(image.path));
+                    //Provider.of<AngleViewModel>(context, listen: false)
+                    //    .uploadImageAndPredictAngle(File(image.path));
                     Navigator.pop(context);
                   }
                 },

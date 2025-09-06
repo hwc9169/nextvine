@@ -23,9 +23,9 @@ class _CameraGuideScreenState extends State<CameraGuideScreen> {
 
   final List<GuideStep> _guideSteps = [
     GuideStep(
-      Image(image: AssetImage('assets/body.png'), width: 400, height: 400),
+      Image(image: AssetImage('assets/body.png'), width: 360, height: 360),
       'Align your shoulder with the horizontal line',
-      'Ensuring the camera is at chest level. The camera should be landscape and capture your entire back, from your neck to your lower back.',
+      'Ensuring the camera is at chest level.',
     )
   ];
 

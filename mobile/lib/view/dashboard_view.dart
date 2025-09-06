@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,6 +18,21 @@ class _DashboardViewState extends State<DashboardView> {
   @override
   void initState() {
     super.initState();
+    // Set orientation to portrait up when dashboard view is active
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+  }
+
+  @override
+  void dispose() {
+    // Restore original orientation when leaving dashboard view
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+    super.dispose();
   }
 
   @override
@@ -40,7 +56,6 @@ class _DashboardViewState extends State<DashboardView> {
                   child: Column(
                     children: [
                       // Row 1: 3 items in a row
-
                       Row(
                         children: [
                           Expanded(
@@ -48,7 +63,7 @@ class _DashboardViewState extends State<DashboardView> {
                               icon: Icons.show_chart,
                               color: Colors.blue,
                               title: "Proximal thoracic",
-                              value: vm.angle.proximalThoracic,
+                              value: vm.angle?.proximalThoracic ?? 0.0,
                             ),
                           ),
                           const SizedBox(width: 4),
@@ -57,7 +72,7 @@ class _DashboardViewState extends State<DashboardView> {
                               icon: Icons.straighten,
                               color: Colors.orange,
                               title: "Main thoracic",
-                              value: vm.angle.mainThoracic,
+                              value: vm.angle?.mainThoracic ?? 0.0,
                             ),
                           ),
                           const SizedBox(width: 4),
@@ -66,14 +81,14 @@ class _DashboardViewState extends State<DashboardView> {
                               icon: Icons.balance,
                               color: Colors.green,
                               title: "Lumbar",
-                              value: vm.angle.lumbar,
+                              value: vm.angle?.lumbar ?? 0.0,
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 4),
                       // Row 2: Back type spanning full width
-                      _buildBackTypeCard(vm.angle),
+                      if (vm.angle != null) _buildBackTypeCard(vm.angle!),
                     ],
                   ))),
         ],
@@ -98,11 +113,17 @@ class _DashboardViewState extends State<DashboardView> {
           children: [
             Icon(icon, size: 24, color: color),
             const SizedBox(height: 8),
-            Text(
-              title,
-              style: GoogleFonts.poppins(
-                fontSize: 10,
-                fontWeight: FontWeight.w200,
+            SizedBox(
+              width: double.infinity,
+              child: Text(
+                title,
+                style: GoogleFonts.poppins(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w200,
+                ),
+                overflow: TextOverflow.visible,
+                maxLines: 1,
+                textScaler: TextScaler.linear(1.0),
               ),
             ),
             const SizedBox(height: 12),
@@ -151,7 +172,7 @@ class _DashboardViewState extends State<DashboardView> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Back Type Analysis",
+                          "Back Type",
                           style: GoogleFonts.poppins(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -159,7 +180,7 @@ class _DashboardViewState extends State<DashboardView> {
                           ),
                         ),
                         Text(
-                          angle.backType.toString(),
+                          BackTypeExtension.toText(angle.backType),
                           style: GoogleFonts.poppins(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -175,26 +196,9 @@ class _DashboardViewState extends State<DashboardView> {
               Center(
                 child: Builder(
                   builder: (context) {
-                    String assetName;
-                    switch (angle.backType) {
-                      case BackType.doubleThoracic:
-                        assetName = 'assets/images/double_thoracic.png';
-                        break;
-                      case BackType.singleThoracic:
-                        assetName = 'assets/images/single_thoracic.png';
-                        break;
-                      case BackType.doubleLumbar:
-                        assetName = 'assets/images/double_lumbar.png';
-                        break;
-                      case BackType.singleLumbar:
-                        assetName = 'assets/images/single_lumbar.png';
-                        break;
-                      default:
-                        assetName = 'assets/images/double_thoracic.png';
-                    }
-                    return Image.asset(
-                      assetName,
-                      height: 120,
+                    return Image(
+                      image: AssetImage('assets/back_type.png'),
+                      height: 200,
                       fit: BoxFit.contain,
                     );
                   },
