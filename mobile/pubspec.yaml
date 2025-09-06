@@ -48,7 +48,7 @@ flutter:
 
     
 flutter_launcher_icons:
-  image_path: "assets/body.png"
+  image_path: "assets/icon.png"
   android: true
   ios: false
 
