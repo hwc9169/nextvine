@@ -23,7 +23,7 @@ class _CameraGuideScreenState extends State<CameraGuideScreen> {
 
   final List<GuideStep> _guideSteps = [
     GuideStep(
-      Image(image: AssetImage('assets/body.png'), width: 360, height: 360),
+      Image(image: AssetImage('assets/body.png'), width: 320, height: 320),
       'Align your shoulder with the horizontal line',
       'Ensuring the camera is at chest level.',
     )
@@ -103,16 +103,16 @@ class _CameraGuideScreenState extends State<CameraGuideScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           guide.image,
-          const SizedBox(height: 24),
+          const SizedBox(height: 6),
           Text(
             guide.title,
             style: GoogleFonts.poppins(
-              fontSize: 18,
+              fontSize: 12,
               fontWeight: FontWeight.bold,
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 6),
           Text(
             guide.description,
             style: GoogleFonts.poppins(fontSize: 12),

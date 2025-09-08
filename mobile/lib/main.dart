@@ -34,7 +34,7 @@ class ProviderApp extends StatelessWidget {
       child: MaterialApp(
         title: 'NextVine',
         theme: CustomeTheme.theme,
-        initialRoute: '/splash',
+        initialRoute: '/',
         routes: {
           '/splash': (context) => SplashScreen(),
           '/': (context) => HomeScreen(),

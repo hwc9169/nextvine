@@ -45,10 +45,18 @@ flutter:
     - assets/body.png
     - assets/body_align.jpg
     - assets/back_type.png
+    - assets/icon.png
+    - assets/branding.png
+    - assets/double_major.png
+    - assets/double_thoracic.png
+    - assets/lumber.png
+    - assets/normal.png
+    - assets/thoracic.png
+    - assets/tripple.png
 
-    
 flutter_launcher_icons:
   image_path: "assets/icon.png"
+  adaptive_icon_background: "#0a828a"
   android: true
   ios: false
 
@@ -56,4 +64,9 @@ flutter_native_splash:
   color: "#0a828a"
 
   android: true
+  android_12:
+    icon_background_color: "#0a828a"
+    color: "#0a828a"
+    image: "assets/icon.png"
+    branding: "assets/branding.png"
   ios: false

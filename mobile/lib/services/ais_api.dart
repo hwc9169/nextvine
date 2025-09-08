@@ -1,39 +1,51 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-enum BackType {
+enum ScoliosisType {
   doubleThoracic,
-  singleThoracic,
-  doubleLumbar,
-  singleLumbar,
+  doubleMajor,
+  thoracic,
+  lumber,
+  normal,
+  triple,
 }
 
-extension BackTypeExtension on BackType {
-  static BackType fromText(String backType) {
-    switch (backType) {
+extension ScoliosisTypeExtension on ScoliosisType {
+  static ScoliosisType fromText(String scoliosisType) {
+    switch (scoliosisType) {
       case 'double thoracic':
-        return BackType.doubleThoracic;
-      case 'single thoracic':
-        return BackType.singleThoracic;
-      case 'double lumbar':
-        return BackType.doubleLumbar;
-      case 'single lumbar':
-        return BackType.singleLumbar;
+        return ScoliosisType.doubleThoracic;
+      case 'double major':
+        return ScoliosisType.doubleMajor;
+      case 'thoracic':
+        return ScoliosisType.thoracic;
+      case 'lumber':
+        return ScoliosisType.lumber;
+      case 'normal':
+        return ScoliosisType.normal;
+      case 'triple':
+        return ScoliosisType.triple;
       default:
-        return BackType.doubleThoracic;
+        return ScoliosisType.doubleThoracic;
     }
   }
 
-  static String toText(BackType backType) {
-    switch (backType) {
-      case BackType.doubleThoracic:
+  static String toText(ScoliosisType scoliosisType) {
+    switch (scoliosisType) {
+      case ScoliosisType.doubleThoracic:
         return 'double thoracic';
-      case BackType.singleThoracic:
-        return 'single thoracic';
-      case BackType.doubleLumbar:
-        return 'double lumbar';
-      case BackType.singleLumbar:
-        return 'single lumbar';
+      case ScoliosisType.doubleMajor:
+        return 'double major';
+      case ScoliosisType.thoracic:
+        return 'thoracic';
+      case ScoliosisType.lumber:
+        return 'lumber';
+      case ScoliosisType.normal:
+        return 'normal';
+      case ScoliosisType.triple:
+        return 'triple';
+      default:
+        return 'double thoracic';
     }
   }
 }
@@ -42,9 +54,10 @@ class Angle {
   double proximalThoracic;
   double mainThoracic;
   double lumbar;
-  BackType backType;
+  ScoliosisType scoliosisType;
 
-  Angle(this.proximalThoracic, this.mainThoracic, this.lumbar, this.backType);
+  Angle(this.proximalThoracic, this.mainThoracic, this.lumbar,
+      this.scoliosisType);
 }
 
 class AisAPI {
@@ -60,13 +73,13 @@ class AisAPI {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      final backType =
-          BackTypeExtension.fromText(data['back_type'] ?? 'double thoracic');
+      final scoliosisType = ScoliosisTypeExtension.fromText(
+          data['scoliosis_type'] ?? 'double thoracic');
       return Angle(
         data['proximal_thoracic'] ?? 0.0,
         data['main_thoracic'] ?? 0.0,
         data['lumbar'] ?? 0.0,
-        backType,
+        scoliosisType,
       );
     }
     throw Exception('Failed to fetch angle data');
@@ -75,6 +88,6 @@ class AisAPI {
   Future<Angle> predictAngleOnDevice(String imagePath) async {
     // For demonstration, return a fixed angle
     await Future.delayed(const Duration(seconds: 3));
-    return Angle(10.0, 13.0, 0, BackType.doubleThoracic);
+    return Angle(10.0, 13.0, 0, ScoliosisType.doubleThoracic);
   }
 }

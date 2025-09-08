@@ -22,7 +22,7 @@ class AngleViewModel extends ChangeNotifier {
   Future<void> fakePredictAngle(File file) async {
     _setLoading(true);
     await Future.delayed(const Duration(seconds: 3));
-    _angle = Angle(10.0, 13.0, 0, BackType.doubleThoracic);
+    _angle = Angle(10.0, 13.0, 0, ScoliosisType.doubleThoracic);
     _setLoading(false);
   }
 
@@ -35,7 +35,7 @@ class AngleViewModel extends ChangeNotifier {
       'proximalThoracic': _angle?.proximalThoracic,
       'mainThoracic': _angle?.mainThoracic,
       'lumbar': _angle?.lumbar,
-      'backType': _angle?.backType,
+      'scoliosisType': _angle?.scoliosisType,
     };
     final downloadURL = res.downloadURL;
     Logger().i('Download URL: $downloadURL\n Angle predudction result: $data');

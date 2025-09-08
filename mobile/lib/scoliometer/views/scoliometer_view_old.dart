@@ -172,8 +172,8 @@ class _ScoliometerHomeState extends State<ScoliometerHome> {
       _setScaleForRuler(_desiredDeviceWidthCm);
 
       // Set initial orientation based on loaded mount mode
-      _setOrientationForMountMode(_mount);
-
+      SystemChrome.setPreferredOrientations(
+          [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
       final raw = p.getString('pref_history_v1');
       if (raw != null && raw.isNotEmpty) {
         final decoded = jsonDecode(raw) as List<dynamic>;
@@ -674,27 +674,6 @@ class _ScoliometerHomeState extends State<ScoliometerHome> {
     _uiScale = (cm / 18.0).clamp(0.85, 1.15);
   }
 
-  void _setOrientationForMountMode(MountMode mount) {
-    List<DeviceOrientation> orientations;
-
-    switch (mount) {
-      case MountMode.flatBack:
-        // Flat back - use portrait for better ergonomics
-        orientations = [DeviceOrientation.portraitUp];
-        break;
-      case MountMode.longEdge:
-        // Long edge - use landscape left for better measurement
-        orientations = [DeviceOrientation.landscapeLeft];
-        break;
-      case MountMode.shortEdge:
-        // Short edge - use landscape right for better measurement
-        orientations = [DeviceOrientation.landscapeRight];
-        break;
-    }
-
-    SystemChrome.setPreferredOrientations(orientations);
-  }
-
   List<int> _availableSessionsDesc() {
     final set = <int>{};
     for (final r in _log) set.add(r.session);
@@ -1163,7 +1142,6 @@ class _ScoliometerHomeState extends State<ScoliometerHome> {
                                 _targetDeg = 0.0;
                               });
                               unawaited(_saveMount());
-                              _setOrientationForMountMode(m);
                               _toast(
                                 m == MountMode.longEdge
                                     ? 'Mount: Long Edge'
@@ -1862,8 +1840,8 @@ class _ChartPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final w = size.width, h = size.height;
 
-    // Layout (minimal padding to maximize plot area)
-    final padding = const EdgeInsets.fromLTRB(8, 8, 8, 8);
+    // Layout (padding to accommodate Y-axis labels)
+    final padding = const EdgeInsets.fromLTRB(40, 8, 8, 8);
     final plot = Rect.fromLTWH(
       padding.left,
       padding.top,
@@ -1896,23 +1874,36 @@ class _ChartPainter extends CustomPainter {
     double yFor(double v) =>
         plot.bottom - ((v - yMin) / (yMax - yMin)) * plot.height;
 
-    // Grid (y)
-    final grid = Paint()
+    // Grid (y) - Major grid lines every 10 degrees
+    final majorGrid = Paint()
       ..color = _darken(kBrand, 0.12)
       ..strokeWidth = 0.7;
-    for (double y = -30; y <= 30; y += 10) {
+    final minorGrid = Paint()
+      ..color = _darken(kBrand, 0.08)
+      ..strokeWidth = 0.4;
+
+    for (double y = -30; y <= 30; y += 5) {
       final yy = yFor(y);
-      // alternating bands
-      if (((y / 10).round() & 1) == 0) {
+      final isMajor = (y % 10 == 0);
+
+      // alternating bands for major lines
+      if (isMajor && ((y / 10).round() & 1) == 0) {
         canvas.drawRect(
           Rect.fromLTWH(plot.left, yy, plot.width, yFor(y - 10) - yy)
               .intersect(plot),
           Paint()..color = const Color(0x0F000000),
         );
       }
-      canvas.drawLine(Offset(plot.left, yy), Offset(plot.right, yy), grid);
-      _drawSmallText(canvas, '${y.toInt()}°', Offset(plot.left - 10, yy),
-          align: TextAlign.right);
+
+      // Draw grid line
+      canvas.drawLine(Offset(plot.left, yy), Offset(plot.right, yy),
+          isMajor ? majorGrid : minorGrid);
+
+      // Draw labels for major lines
+      if (isMajor) {
+        _drawSmallText(canvas, '${y.toInt()}°', Offset(plot.left - 15, yy),
+            align: TextAlign.right);
+      }
     }
 
     // Axes

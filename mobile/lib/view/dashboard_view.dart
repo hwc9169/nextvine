@@ -88,7 +88,7 @@ class _DashboardViewState extends State<DashboardView> {
                       ),
                       const SizedBox(height: 4),
                       // Row 2: Back type spanning full width
-                      if (vm.angle != null) _buildBackTypeCard(vm.angle!),
+                      if (vm.angle != null) _buildScoliosisTypeCard(vm.angle!),
                     ],
                   ))),
         ],
@@ -128,7 +128,7 @@ class _DashboardViewState extends State<DashboardView> {
             ),
             const SizedBox(height: 12),
             Text(
-              value.toStringAsFixed(1),
+              '${value.toStringAsFixed(1)}°',
               style: GoogleFonts.poppins(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -141,7 +141,7 @@ class _DashboardViewState extends State<DashboardView> {
     );
   }
 
-  Widget _buildBackTypeCard(Angle angle) {
+  Widget _buildScoliosisTypeCard(Angle angle) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -172,7 +172,7 @@ class _DashboardViewState extends State<DashboardView> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Back Type",
+                          "Scoliosis Type",
                           style: GoogleFonts.poppins(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -180,7 +180,7 @@ class _DashboardViewState extends State<DashboardView> {
                           ),
                         ),
                         Text(
-                          BackTypeExtension.toText(angle.backType),
+                          ScoliosisTypeExtension.toText(angle.scoliosisType),
                           style: GoogleFonts.poppins(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -196,11 +196,38 @@ class _DashboardViewState extends State<DashboardView> {
               Center(
                 child: Builder(
                   builder: (context) {
-                    return Image(
-                      image: AssetImage('assets/back_type.png'),
-                      height: 200,
-                      fit: BoxFit.contain,
-                    );
+                    switch (angle.scoliosisType) {
+                      case ScoliosisType.doubleThoracic:
+                        return Image(
+                          image: AssetImage('assets/double_thoracic.png'),
+                          height: 320,
+                        );
+                      case ScoliosisType.doubleMajor:
+                        return Image(
+                          image: AssetImage('assets/double_major.png'),
+                          height: 320,
+                        );
+                      case ScoliosisType.thoracic:
+                        return Image(
+                          image: AssetImage('assets/thoracic.png'),
+                          height: 320,
+                        );
+                      case ScoliosisType.lumber:
+                        return Image(
+                          image: AssetImage('assets/lumber.png'),
+                          height: 320,
+                        );
+                      case ScoliosisType.normal:
+                        return Image(
+                          image: AssetImage('assets/normal.png'),
+                          height: 320,
+                        );
+                      case ScoliosisType.triple:
+                        return Image(
+                          image: AssetImage('assets/triple.png'),
+                          height: 320,
+                        );
+                    }
                   },
                 ),
               ),
