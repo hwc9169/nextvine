@@ -30,6 +30,7 @@ dependencies:
   shared_preferences: ^2.5.3
   flutter_launcher_icons: ^0.14.4
   flutter_native_splash: ^2.4.6
+  tflite_flutter: ^0.11.0
 
 
 dev_dependencies:
@@ -53,6 +54,7 @@ flutter:
     - assets/normal.png
     - assets/thoracic.png
     - assets/tripple.png
+    - assets/model.tflite
 
 flutter_launcher_icons:
   image_path: "assets/icon.png"

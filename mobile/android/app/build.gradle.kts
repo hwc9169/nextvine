@@ -6,12 +6,11 @@ plugins {
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+    id("com.chaquo.python")
 }
 
 android {
-    namespace = "ai.nextvine.scoliosis"
-    compileSdk = 36
-    ndkVersion = "27.0.12077973"
+    namespace = "ai.nextvine.scoliosis" compileSdk = 36 ndkVersion = "27.0.12077973"
     // ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -32,6 +31,15 @@ android {
         targetSdk = 35
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        python {
+            version = "3.10"
+            pip {
+                install("numpy", "onnxruntime", "pillow", "rembg", "requests", "tensorflow", "tqdm")
+            }
+        }
+        ndk {
+            abiFilters.add("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+        }
     }
 
     buildTypes {
@@ -47,8 +55,11 @@ flutter {
     source = "../.."
 }
 
+apply plugin: "com.chaquo.python"
 dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.15.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.mlkit:object-detection:17.0.2")
+
+    implementation("com.chaquo.python:chaquopy:15.0.1")
 }
