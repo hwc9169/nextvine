@@ -5,7 +5,7 @@ enum ScoliosisType {
   doubleThoracic,
   doubleMajor,
   thoracic,
-  lumber,
+  lumbar,
   normal,
   triple,
 }
@@ -19,8 +19,8 @@ extension ScoliosisTypeExtension on ScoliosisType {
         return ScoliosisType.doubleMajor;
       case 'thoracic':
         return ScoliosisType.thoracic;
-      case 'lumber':
-        return ScoliosisType.lumber;
+      case 'lumbar':
+        return ScoliosisType.lumbar;
       case 'normal':
         return ScoliosisType.normal;
       case 'triple':
@@ -38,8 +38,8 @@ extension ScoliosisTypeExtension on ScoliosisType {
         return 'double major';
       case ScoliosisType.thoracic:
         return 'thoracic';
-      case ScoliosisType.lumber:
-        return 'lumber';
+      case ScoliosisType.lumbar:
+        return 'lumbar';
       case ScoliosisType.normal:
         return 'normal';
       case ScoliosisType.triple:

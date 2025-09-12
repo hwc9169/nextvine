@@ -212,9 +212,9 @@ class _DashboardViewState extends State<DashboardView> {
                           image: AssetImage('assets/thoracic.png'),
                           height: 320,
                         );
-                      case ScoliosisType.lumber:
+                      case ScoliosisType.lumbar:
                         return Image(
-                          image: AssetImage('assets/lumber.png'),
+                          image: AssetImage('assets/lumbar.png'),
                           height: 320,
                         );
                       case ScoliosisType.normal:

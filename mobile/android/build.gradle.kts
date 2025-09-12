@@ -1,9 +1,10 @@
 allprojects {
     repositories {
+        gradlePluginPortal()
         google()
         mavenCentral()
     }
-    
+
     // Global dependency resolution strategy
     configurations.all {
         resolutionStrategy {
@@ -15,6 +16,23 @@ allprojects {
             force("androidx.fragment:fragment-ktx:1.6.2")
         }
     }
+}
+
+buildscript {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+        maven { url = uri("https://jitpack.io")}
+    }
+    dependencies {
+        classpath("com.android.tools.build:gradle:8.5.0")
+        //classpath("com.chaquo.python:gradle:16.1.0")
+    }
+}
+
+plugins {
+ //   id("com.chaquo.python") version "15.0.1" apply false
 }
 
 val newBuildDir: Directory = rootProject.layout.buildDirectory.dir("../../build").get()

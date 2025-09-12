@@ -9,6 +9,14 @@ from utils import download_image
 app = FastAPI()
 
 
+@app.post("/login")
+async def login(request: Request):
+    data = await request.json()
+    return {"message": "Login successful"}
+
+
+
+
 @app.get("/angle/")
 async def pred_angle(image_path: str):
     """

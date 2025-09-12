@@ -1,10 +1,10 @@
 name: nextvine
 description: A video recording app.
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -20,7 +20,6 @@ dependencies:
   path: ^1.9.1
   firebase_core: ^3.13.1
   firebase_storage: ^12.4.6
-  google_mlkit_object_detection: ^0.14.0
   http: ^1.2.1
   provider: ^6.1.5
   skeletonizer: ^2.1.0+1
@@ -31,7 +30,7 @@ dependencies:
   flutter_launcher_icons: ^0.14.4
   flutter_native_splash: ^2.4.6
   tflite_flutter: ^0.11.0
-
+  chaquopy: ^0.0.20
 
 dev_dependencies:
   flutter_test:
@@ -50,10 +49,10 @@ flutter:
     - assets/branding.png
     - assets/double_major.png
     - assets/double_thoracic.png
-    - assets/lumber.png
+    - assets/lumbar.png
     - assets/normal.png
     - assets/thoracic.png
-    - assets/tripple.png
+    - assets/triple.png
     - assets/model.tflite
 
 flutter_launcher_icons:

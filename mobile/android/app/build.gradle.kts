@@ -6,20 +6,21 @@ plugins {
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
-    id("com.chaquo.python")
+ //   id("com.chaquo.python") 
 }
 
 android {
-    namespace = "ai.nextvine.scoliosis" compileSdk = 36 ndkVersion = "27.0.12077973"
+    namespace = "ai.nextvine.scoliosis"
+    compileSdk = 36
     // ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     defaultConfig {
@@ -27,18 +28,12 @@ android {
         applicationId = "ai.nextvine.scoliosis"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        minSdk = 24
         targetSdk = 35
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        python {
-            version = "3.10"
-            pip {
-                install("numpy", "onnxruntime", "pillow", "rembg", "requests", "tensorflow", "tqdm")
-            }
-        }
         ndk {
-            abiFilters.add("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+            abiFilters.addAll(listOf("arm64-v8a", "x86_64"))
         }
     }
 
@@ -51,15 +46,29 @@ android {
     }
 }
 
+//chaquopy {
+//    defaultConfig {
+//        buildPython("C:/Users/GPU_6/Desktop/Repository/nextvine/mobile/android/app/src/main/python/.venv/Scripts/python.exe")
+//        pip {
+//            install("pillow")
+//            install("numpy<2.0.0")
+//            install("jsonschema==2.6")
+//        }
+//    }
+//}
+
 flutter {
     source = "../.."
 }
 
-apply plugin: "com.chaquo.python"
+repositories {
+    maven { url = uri("https://jitpack.io")}
+}
+
 dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.15.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.mlkit:object-detection:17.0.2")
-
-    implementation("com.chaquo.python:chaquopy:15.0.1")
+    implementation("com.microsoft.onnxruntime:onnxruntime-android:1.22.0")
+    implementation("com.github.erenalpaslan:removebg:1.0.4")
 }

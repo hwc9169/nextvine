@@ -96,10 +96,10 @@ class _CameraScreenState extends State<CameraScreen> {
                 onTap: () async {
                   final image = await _controller!.takePicture();
                   if (context.mounted) {
-                    Provider.of<AngleViewModel>(context, listen: false)
-                        .fakePredictAngle(File(image.path));
                     //Provider.of<AngleViewModel>(context, listen: false)
-                    //    .uploadImageAndPredictAngle(File(image.path));
+                    //    .fakePredictAngle(File(image.path));
+                    Provider.of<AngleViewModel>(context, listen: false)
+                        .predictAngleOnDevice(image.path);
                     Navigator.pop(context);
                   }
                 },
