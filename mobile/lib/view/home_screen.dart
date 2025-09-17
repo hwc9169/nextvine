@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:nextvine/scoliometer/views/scoliometer_view_old.dart';
 import 'dashboard_view.dart';
 import 'package:nextvine/view/camera_guide_screen.dart';
+import 'package:nextvine/view_model/auth_view_model.dart';
+import 'package:provider/provider.dart';
 
 class Pair {
   final String title;
@@ -34,6 +36,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+
     return Scaffold(
       body: _pages[_selectedIndex].widget,
       bottomNavigationBar: BottomAppBar(
@@ -71,7 +75,9 @@ class _HomeScreenState extends State<HomeScreen> {
               child: const Icon(Icons.videocam, color: Colors.white),
               onPressed: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const CameraGuideScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => const CameraGuideScreen(),
+                  ),
                 );
               },
             ),

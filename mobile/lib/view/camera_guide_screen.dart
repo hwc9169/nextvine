@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:provider/provider.dart';
+import 'package:nextvine/view_model/auth_view_model.dart';
 import 'camera_screen.dart';
 
 class CameraGuideScreen extends StatefulWidget {
@@ -29,12 +30,12 @@ class _CameraGuideScreenState extends State<CameraGuideScreen> {
     )
   ];
 
-  void _nextStep() {
+  void _nextStep(BuildContext context) {
     if (_currentStep < _guideSteps.length - 1) {
       setState(() => _currentStep++);
     } else {
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const CameraScreen()));
+          MaterialPageRoute(builder: (context) => const CameraScreen()));
     }
   }
 
@@ -66,7 +67,7 @@ class _CameraGuideScreenState extends State<CameraGuideScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _nextStep,
+        onPressed: () => _nextStep(context),
         child: Icon(
           _currentStep == _guideSteps.length - 1
               ? Icons.check

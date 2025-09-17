@@ -17,6 +17,7 @@ dependencies:
   google_fonts: ^6.1.0
   googleapis: ^14.0.0
   googleapis_auth: ^2.0.0
+  google_sign_in: ^6.2.1
   path: ^1.9.1
   firebase_core: ^3.13.1
   firebase_storage: ^12.4.6
@@ -31,6 +32,7 @@ dependencies:
   flutter_native_splash: ^2.4.6
   tflite_flutter: ^0.11.0
   chaquopy: ^0.0.20
+  firebase_auth: ^5.7.0
 
 dev_dependencies:
   flutter_test:

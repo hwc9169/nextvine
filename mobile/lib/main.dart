@@ -4,10 +4,13 @@ import 'package:flutter/services.dart';
 
 import 'firebase_options.dart';
 import 'package:provider/provider.dart';
+import 'view/auth_wrapper.dart';
+import 'view/login_screen.dart';
 import 'view/splash_screen.dart';
 import 'view/home_screen.dart';
 import 'view/camera_screen.dart';
 import 'view_model/angle_view_model.dart';
+import 'view_model/auth_view_model.dart';
 import 'theme.dart';
 
 void main() async {
@@ -29,16 +32,20 @@ class ProviderApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => AngleViewModel(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AngleViewModel()),
+        ChangeNotifierProvider(create: (_) => AuthViewModel()),
+      ],
       child: MaterialApp(
         title: 'NextVine',
         theme: CustomeTheme.theme,
-        initialRoute: '/',
+        home: const AuthWrapper(),
         routes: {
-          '/splash': (context) => SplashScreen(),
-          '/': (context) => HomeScreen(),
-          '/camera': (context) => CameraScreen(),
+          '/login': (context) => const LoginScreen(),
+          '/splash': (context) => const SplashScreen(),
+          '/home': (context) => const HomeScreen(),
+          '/camera': (context) => const CameraScreen(),
         },
       ),
     );

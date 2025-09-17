@@ -3,13 +3,24 @@ import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter/services.dart';
 
+class FullOutput extends LogOutput {
+  @override
+  void output(OutputEvent event) {
+    for (var line in event.lines) {
+      print(line);
+    }
+  }
+}
+
 class TFLiteService {
   static final TFLiteService _instance = TFLiteService._internal();
   factory TFLiteService() => _instance;
   TFLiteService._internal();
 
   Interpreter? _interpreter;
-  final Logger _logger = Logger();
+  final Logger _logger = Logger(
+    output: FullOutput(),
+  );
 
   Future<void> loadModel() async {
     try {
@@ -36,16 +47,11 @@ class TFLiteService {
       
       _logger.i('Input shape: $inputShape');
       _logger.i('Output shape: $outputShape');
-      _logger.i('Input data: $inputData');
-      _logger.i('Input data length: ${inputData.length}');
 
       // Prepare output tensor
       // List<List<double>> [1, 3]
       final output = [List.filled(outputShape.reduce((a, b) => a * b), 0.0).toList()];
       
-
-      _logger.i('Output shape: $outputShape');
-      _logger.i('Output: $output');
 
       // Run inference
       _interpreter!.run(inputData, output);
@@ -65,7 +71,7 @@ class TFLiteService {
 
   }
 
-  dispose() {
+  void dispose() {
     _interpreter?.close();
     _interpreter = null;
   }

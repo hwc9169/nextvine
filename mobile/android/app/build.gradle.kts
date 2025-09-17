@@ -68,7 +68,9 @@ repositories {
 dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.15.0"))
     implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.mlkit:object-detection:17.0.2")
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.0")
+
     implementation("com.microsoft.onnxruntime:onnxruntime-android:1.22.0")
     implementation("com.github.erenalpaslan:removebg:1.0.4")
 }

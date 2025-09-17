@@ -39,24 +39,25 @@ class AngleViewModel extends ChangeNotifier {
       'lumbar': _angle?.lumbar,
       'scoliosisType': _angle?.scoliosisType,
     };
-    final downloadURL = res.downloadURL; 
+    final downloadURL = res.downloadURL;
     Logger().i('Download URL: $downloadURL\n Angle predudction result: $data');
     _setLoading(false);
   }
-  Future<void> predictAngleOnDevice(String imagePath) async {
+
+  Future<Angle> predictAngleOnDevice(String imagePath) async {
     _setLoading(true);
     const platform = MethodChannel('ai.nextvine.scoliosis/angle');
-    
+
     try {
       // Step 1: Preprocess image using Android native preprocessing
       Logger().i('Preprocessing image: $imagePath');
-      final preprocessedData = await platform.invokeMethod('preprocess', {'imagePath': imagePath});
-      Logger().i('Preprocessed data received, length: ${preprocessedData.length}');
+      final preprocessedData =
+          await platform.invokeMethod('preprocess', {'imagePath': imagePath});
 
       // Step 2: Convert preprocessed data to the format expected by TensorFlow Lite
-      final List<List<List<List<double>>>> imageData = convertTo4D(preprocessedData);
-      Logger().i('Preprocessed data received, length: ${imageData.length}');
-      
+      final List<List<List<List<double>>>> imageData =
+          convertTo4D(preprocessedData);
+
       // Step 3: Run inference using TensorFlow Lite
       Logger().i('Running TensorFlow Lite inference');
       final predictions = await tfliteService.predictFromFloatArray(imageData);
@@ -68,7 +69,8 @@ class AngleViewModel extends ChangeNotifier {
       final lumbar = predictions['lumbar'] ?? 0.0;
 
       // Step 5: Determine scoliosis type based on the angles
-      final scoliosisType = _determineScoliosisType(proximalThoracic, mainThoracic, lumbar);
+      final scoliosisType =
+          _determineScoliosisType(proximalThoracic, mainThoracic, lumbar);
 
       _angle = Angle(
         proximalThoracic,
@@ -76,17 +78,16 @@ class AngleViewModel extends ChangeNotifier {
         lumbar,
         scoliosisType,
       );
+      return _angle!;
     } catch (e) {
       Logger().e('Error predicting angle: $e');
-      // Handle error - you might want to show an error message to the user
+      return Angle(0.0, 0.0, 0.0, ScoliosisType.normal);
     }
 
     _setLoading(false);
   }
 
   List<List<List<List<double>>>> convertTo4D(List<Object?> preprocessedData) {
-      // Convert the Android FloatArray data to List<double> for TensorFlow Lite
-    Logger().i('Preprocessed data: $preprocessedData');
     try {
       final out = _to4D(preprocessedData);
       // Optional: log shape
@@ -102,7 +103,7 @@ class AngleViewModel extends ChangeNotifier {
 
   List<List<List<List<double>>>> _to4D(Object? data) {
     final l0 = _asList(data);
-    return List<List<List<List<double>>>>.unmodifiable(
+    final out = List<List<List<List<double>>>>.unmodifiable(
       l0.map((l1) {
         final l1c = _asList(l1);
         return List<List<List<double>>>.unmodifiable(
@@ -112,7 +113,8 @@ class AngleViewModel extends ChangeNotifier {
               l2c.map((l3) {
                 final l3c = _asList(l3);
                 if (l3c.length != 3) {
-                  throw FormatException('Innermost list must have length 3 (RGB), got ${l3c.length}.');
+                  throw FormatException(
+                      'Innermost list must have length 3 (RGB), got ${l3c.length}.');
                 }
                 return List<double>.unmodifiable(l3c.map(_asDouble));
               }),
@@ -121,6 +123,7 @@ class AngleViewModel extends ChangeNotifier {
         );
       }),
     );
+    return out;
   }
 
   List _asList(Object? v) {
@@ -130,20 +133,21 @@ class AngleViewModel extends ChangeNotifier {
 
   double _asDouble(Object? v) {
     if (v is num) return v.toDouble();
-    throw FormatException('Expected num at innermost level, got ${v.runtimeType}');
+    throw FormatException(
+        'Expected num at innermost level, got ${v.runtimeType}');
   }
 
-
-  ScoliosisType _determineScoliosisType(double proximal, double main, double lumbar) {
+  ScoliosisType _determineScoliosisType(
+      double proximal, double main, double lumbar) {
     const threshold = 8.0;
-    
+
     // Convert angles to straight/bent pattern
     final proximalType = proximal <= threshold ? 'Straight' : 'Bent';
     final mainType = main <= threshold ? 'Straight' : 'Bent';
     final lumbarType = lumbar <= threshold ? 'Straight' : 'Bent';
-    
+
     final pattern = '$proximalType-$mainType-$lumbarType';
-    
+
     switch (pattern) {
       case 'Straight-Straight-Straight':
         return ScoliosisType.normal;

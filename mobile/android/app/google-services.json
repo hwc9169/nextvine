@@ -12,7 +12,12 @@
           "package_name": "ai.nextvine.scoliosis"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "910239999533-v279jljm5epb9lfgn85jmhehn3unl9b2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCzr3vHgtzMxuPuDa4UeB9hk_cs57R4q7I"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "910239999533-v279jljm5epb9lfgn85jmhehn3unl9b2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "910239999533-1k23rm9alme4dg5b367a2d0qeeqks4bp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ui"
+              }
+            }
+          ]
         }
       }
     }
