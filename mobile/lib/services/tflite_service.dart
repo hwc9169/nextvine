@@ -32,7 +32,8 @@ class TFLiteService {
     }
   }
 
-  Future<Map<String, double>> predictFromFloatArray(List<List<List<List<double>>>> preprocessedData) async {
+  Future<Map<String, double>> predictFromFloatArray(
+      List<List<List<List<double>>>> preprocessedData) async {
     if (_interpreter == null) {
       await loadModel();
     }
@@ -40,18 +41,16 @@ class TFLiteService {
     try {
       // Convert List<double> to Float32List for TensorFlow Lite
       final inputData = preprocessedData;
-      
+
       // Get input and output shapes
-      final inputShape = _interpreter!.getInputTensor(0).shape;
+      //final inputShape = _interpreter!.getInputTensor(0).shape;
       final outputShape = _interpreter!.getOutputTensor(0).shape;
-      
-      _logger.i('Input shape: $inputShape');
-      _logger.i('Output shape: $outputShape');
 
       // Prepare output tensor
       // List<List<double>> [1, 3]
-      final output = [List.filled(outputShape.reduce((a, b) => a * b), 0.0).toList()];
-      
+      final output = [
+        List.filled(outputShape.reduce((a, b) => a * b), 0.0).toList()
+      ];
 
       // Run inference
       _interpreter!.run(inputData, output);
@@ -68,7 +67,6 @@ class TFLiteService {
       _logger.e('Error during inference: $e');
       rethrow;
     }
-
   }
 
   void dispose() {
@@ -76,5 +74,3 @@ class TFLiteService {
     _interpreter = null;
   }
 }
-
-

@@ -17,35 +17,32 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => AuthViewModel(),
-      child: Scaffold(
-        backgroundColor: const Color(0xFF0a828a),
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // App Logo and Title
-                Column(
-                  children: [
-                    const SizedBox(height: 80),
-                    _buildHeader(),
-                    _buildWelcomeText(),
-                  ],
-                ),
-                // Google Sign-In Button
-                Column(
-                  children: [
-                    _buildGoogleSignInButton(),
-                    const SizedBox(height: 40),
-                    _buildTermsText(),
-                  ],
-                ),
-              ],
-            ),
+    return Scaffold(
+      backgroundColor: const Color(0xFF0a828a),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // App Logo and Title
+              Column(
+                children: [
+                  const SizedBox(height: 80),
+                  _buildHeader(),
+                  _buildWelcomeText(),
+                ],
+              ),
+              // Google Sign-In Button
+              Column(
+                children: [
+                  _buildGoogleSignInButton(),
+                  const SizedBox(height: 40),
+                  _buildTermsText(),
+                ],
+              ),
+            ],
           ),
         ),
       ),
@@ -235,16 +232,17 @@ class _LoginScreenState extends State<LoginScreen> {
     final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
 
     try {
-      await authViewModel.signInWithGoogle();
+      final user = await authViewModel.signInWithGoogle();
 
-      if (authViewModel.currentUser != null && context.mounted) {
-        _logger.i(
-            'Login successful for user: ${authViewModel.currentUser?.email}');
+      if (user != null) {
+        _logger.i('Login successful for user: ${user.email}');
 
         // Navigate to main app
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-        );
+        if (context.mounted) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
+          );
+        }
       } else {
         _logger.w('Login was cancelled or failed');
         if (context.mounted) {

@@ -18,7 +18,6 @@ class _AuthWrapperState extends State<AuthWrapper> {
   Widget build(BuildContext context) {
     return Consumer<AuthViewModel>(
       builder: (context, authViewModel, child) {
-        logger.i('AuthViewModel: $authViewModel');
         // Show loading screen while checking authentication
         if (authViewModel.isLoading && authViewModel.currentUser == null) {
           return _buildLoadingScreen();

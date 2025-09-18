@@ -9,6 +9,7 @@ import 'package:nextvine/services/google_drive.dart';
 import 'package:googleapis/drive/v3.dart' as drive;
 import 'dart:convert';
 import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 import 'package:logger/logger.dart';
 
 class CameraScreen extends StatefulWidget {
@@ -125,33 +126,20 @@ class _CameraScreenState extends State<CameraScreen> {
                       final authViewModel =
                           Provider.of<AuthViewModel>(context, listen: false);
 
-                      final angle =
-                          await angleViewModel.predictAngleOnDevice(image.path);
+                      // another thread in here
+                      Future.microtask(() async {
+                        final angle = await angleViewModel
+                            .predictAngleOnDevice(image.path);
+                        logger.i('Angle: $angle');
+                        final auth =
+                            await authViewModel.currentUser!.authentication;
+                        logger.i('Auth: ${auth.accessToken!}');
+                        final driveApi =
+                            await getGoogleDriveApi(auth.accessToken!);
+                        await uploadFileToGoogleDrive(
+                            driveApi, jsonEncode(angle.toJson()));
+                      });
 
-                      logger.i('Angle: $angle');
-
-                      final auth =
-                          await authViewModel.currentUser!.authentication;
-                      logger.i('Auth: ${auth.accessToken!}');
-
-                      final driveApi =
-                          await getGoogleDriveApi(auth.accessToken!);
-
-                      final bytes = utf8.encode(angle.toString());
-                      final media = drive.Media(
-                        Stream<List<int>>.value(bytes),
-                        bytes.length,
-                        contentType: 'application/json; charset=utf-8',
-                      );
-
-                      final meta = drive.File()
-                        ..name = 'angle.json'
-                        ..mimeType = 'application/json; charset=utf-8'
-                        ..parents = ['scolioscan'];
-
-                      final file = await driveApi.files.create(meta,
-                          uploadMedia: media,
-                          uploadOptions: drive.UploadOptions.defaultOptions);
                       if (context.mounted) {
                         Navigator.pop(context);
                       }

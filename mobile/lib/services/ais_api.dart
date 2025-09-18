@@ -58,6 +58,22 @@ class Angle {
 
   Angle(this.proximalThoracic, this.mainThoracic, this.lumbar,
       this.scoliosisType);
+
+  factory Angle.fromJson(Map<String, dynamic> json) {
+    return Angle(
+      json['proximalThoracic']?.toDouble() ?? 0.0,
+      json['mainThoracic']?.toDouble() ?? 0.0,
+      json['lumbar']?.toDouble() ?? 0.0,
+      ScoliosisTypeExtension.fromText(json['scoliosisType'] ?? 'normal'),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'proximalThoracic': proximalThoracic,
+        'mainThoracic': mainThoracic,
+        'lumbar': lumbar,
+        'scoliosisType': ScoliosisTypeExtension.toText(scoliosisType),
+      };
 }
 
 class AisAPI {

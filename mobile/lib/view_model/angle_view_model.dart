@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:googleapis/drive/v3.dart' as drive;
 import 'package:logger/logger.dart';
 import 'package:nextvine/services/ais_api.dart';
+import 'package:nextvine/services/google_drive.dart';
 import 'package:nextvine/repository/firebase_storage_repository.dart';
 import 'package:nextvine/services/tflite_service.dart';
 import 'package:flutter/services.dart';
-
 import 'dart:io';
+import 'dart:convert';
 
 class AngleViewModel extends ChangeNotifier {
   final aisAPI = AisAPI();
@@ -82,6 +84,17 @@ class AngleViewModel extends ChangeNotifier {
     } catch (e) {
       Logger().e('Error predicting angle: $e');
       return Angle(0.0, 0.0, 0.0, ScoliosisType.normal);
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  Future<void> getLatestAngle(drive.DriveApi driveApi) async {
+    _setLoading(true);
+
+    final jsonString = await downloadLatestFileFromGoogleDrive(driveApi);
+    if (jsonString != null) {
+      _angle = Angle.fromJson(jsonDecode(jsonString));
     }
 
     _setLoading(false);

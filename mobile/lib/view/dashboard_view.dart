@@ -4,8 +4,11 @@ import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:nextvine/view_model/angle_view_model.dart';
 import 'package:nextvine/services/ais_api.dart';
+import 'package:nextvine/services/google_drive.dart';
+import 'package:nextvine/view_model/auth_view_model.dart';
+import 'package:nextvine/view_model/angle_view_model.dart';
+import 'package:logger/logger.dart';
 
 class DashboardView extends StatefulWidget {
   const DashboardView({super.key});
@@ -22,6 +25,20 @@ class _DashboardViewState extends State<DashboardView> {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
+    _fetchData();
+  }
+
+  void _fetchData() async {
+    if (mounted) {
+      final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+      final angleViewModel =
+          Provider.of<AngleViewModel>(context, listen: false);
+      final auth = await authViewModel.currentUser?.authentication;
+      if (auth?.accessToken != null) {
+        final driveApi = await getGoogleDriveApi(auth!.accessToken!);
+        await angleViewModel.getLatestAngle(driveApi);
+      }
+    }
   }
 
   @override

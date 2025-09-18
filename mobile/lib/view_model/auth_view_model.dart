@@ -39,18 +39,22 @@ class AuthViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> signInWithGoogle() async {
+  Future<GoogleSignInAccount?> signInWithGoogle() async {
     try {
       _setLoading(true);
       _clearError();
-
-      await _googleSignIn.signIn();
+      _currentUser = await _googleSignIn.signIn();
+      _logger.i('current user fetched, ${_currentUser?.toString()}');
+      _logger.i('current user fetched, ${currentUser?.toString()}');
+      notifyListeners();
+      return currentUser;
     } catch (e) {
       _logger.e('Sign-in error: $e');
       _setError('Sign-in failed: ${e.toString()}');
     } finally {
       _setLoading(false);
     }
+    return null;
   }
 
   Future<void> signOut() async {
