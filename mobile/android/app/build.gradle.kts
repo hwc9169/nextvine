@@ -1,3 +1,6 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     id("com.android.application")
     // START: FlutterFire Configuration
@@ -6,7 +9,12 @@ plugins {
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+
  //   id("com.chaquo.python") 
+}
+
+val keystoreProps = Properties().apply {
+    FileInputStream(file("../key.properties")).use { load(it) }
 }
 
 android {
@@ -37,11 +45,25 @@ android {
         }
     }
 
+    signingConfigs {
+        create("scolioscan-release") {
+            val storeFilePath = keystoreProps.getProperty("storeFile") ?: ""
+            storeFile = if (storeFilePath.isNotEmpty()) file(storeFilePath) else null
+            storePassword = keystoreProps.getProperty("storePassword")
+            keyAlias = keystoreProps.getProperty("keyAlias")
+            keyPassword = keystoreProps.getProperty("keyPassword")
+        }
+    }
+
     buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+        getByName("release") {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            signingConfig = signingConfigs.getByName("scolioscan-release") // signing key is in the root directory
         }
     }
 }
@@ -67,10 +89,14 @@ repositories {
 
 dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.15.0"))
-    implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.0")
+
 
     implementation("com.microsoft.onnxruntime:onnxruntime-android:1.22.0")
     implementation("com.github.erenalpaslan:removebg:1.0.4")
+    implementation("org.tensorflow:tensorflow-lite-gpu-delegate-plugin:0.4.4")
+    implementation("com.google.android.material:material:1.13.0")
+
 }

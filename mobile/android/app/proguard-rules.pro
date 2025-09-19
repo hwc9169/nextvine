@@ -1,0 +1,6 @@
+-keep class org.tensorflow.** { *; }
+-keep class org.pytorch.** { *; }
+-keep class com.facebook.jni.** { *; }
+-dontwarn org.tensorflow.**
+-dontwarn org.pytorch.**
+-dontwarn com.facebook.jni.**
